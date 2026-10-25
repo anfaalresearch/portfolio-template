@@ -7,31 +7,56 @@
   <meta name="description" content="Personal portfolio of Muhammed Anfaal M M — First-year B.Tech student in CS-AI at TKM College of Engineering, Kollam.">
   <meta name="author" content="Muhammed Anfaal M M">
   <title>Muhammed Anfaal M M | Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+
   <header class="hero">
+    <div class="status-badge">
+      <span class="status-dot"></span> Open to learning &amp; open source
+    </div>
     <h1 id="name"></h1>
     <p id="tagline"></p>
     <nav id="links"></nav>
   </header>
+
   <main>
-    <section>
-      <h2>About</h2>
-      <p id="bio"></p>
+    <section class="section-card">
+      <div class="section-header">
+        <span class="section-icon">✨</span>
+        <h2>About Me</h2>
+      </div>
+      <p id="bio" class="bio-text"></p>
     </section>
-    <section>
-      <h2>Skills</h2>
+
+    <section class="section-card">
+      <div class="section-header">
+        <span class="section-icon">⚡</span>
+        <h2>Skills &amp; Technologies</h2>
+      </div>
       <ul id="skills" class="chips"></ul>
     </section>
+
     <section>
-      <h2>Projects</h2>
+      <div class="section-header">
+        <span class="section-icon">🚀</span>
+        <h2>Featured Projects</h2>
+      </div>
       <div id="projects" class="grid"></div>
     </section>
   </main>
-  <footer id="footer"></footer>
-  <p class="footer-note" style="text-align: center; color: var(--muted); font-size: 0.85rem; margin-top: -24px; padding-bottom: 32px;">Built for FOSSSoC-S1 &bull; FOSS TKMCE</p>
+
+  <footer class="site-footer">
+    <div id="footer"></div>
+    <p class="footer-note">Built for FOSSSoC-S1 &bull; T.K.M. College of Engineering</p>
+  </footer>
+
   <script src="script.js"></script>
 </body>
 
