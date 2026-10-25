@@ -1,98 +1,165 @@
 <!doctype html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Personal portfolio of Muhammed Anfaal M M — First-year B.Tech student in CS-AI at TKM College of Engineering, Kollam.">
+  <meta name="description" content="Muhammed Anfaal M M — CS+AI student at TKM College of Engineering. Building things to understand how they work.">
   <meta name="author" content="Muhammed Anfaal M M">
-  <title>Muhammed Anfaal M M | Portfolio</title>
+  <title>Anfaal — Portfolio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-  <!-- Cursor spotlight -->
-  <div class="cursor-glow" id="cursorGlow"></div>
 
-  <!-- Ambient background orbs -->
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
+  <!-- Custom cursor (hidden on touch) -->
+  <div class="cursor" id="cursor" aria-hidden="true"></div>
 
-  <!-- Hero -->
-  <header class="hero reveal">
-    <div class="avatar-wrap">
-      <img src="avatar.jpg" alt="Muhammed Anfaal M M" class="avatar-img">
-      <div class="avatar-ring"></div>
+  <!-- ── Navigation ──────────────────────────────── -->
+  <nav class="nav" role="navigation" aria-label="Main">
+    <a href="#" class="nav-logo" aria-label="Home">Ʌ</a>
+    <ul class="nav-links" role="list">
+      <li><a href="#about">About</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#toolkit">Stack</a></li>
+    </ul>
+    <a id="nav-cta" href="https://github.com/anfaalresearch" target="_blank" rel="noopener noreferrer" class="nav-cta">
+      Let's Connect ↗
+    </a>
+  </nav>
+
+  <!-- ── Hero ────────────────────────────────────── -->
+  <header class="hero" id="about">
+    <div class="hero-topbar">
+      <div class="hero-status">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span>Open to learning &amp; open source</span>
+      </div>
+      <div class="hero-location" aria-label="Location and year">Kollam, India · 2026</div>
     </div>
 
-    <div class="status-badge">
-      <span class="status-dot"></span>
-      Open to learning &amp; open source
-    </div>
+    <div class="hero-grid">
 
-    <h1 id="name"></h1>
-    <p id="tagline"></p>
-    <nav id="links"></nav>
+      <!-- Left content -->
+      <div class="hero-content" data-reveal>
+        <h1 class="hero-heading">
+          Building things<br>
+          <em>to understand</em><br>
+          how they work<span class="accent-dot" aria-hidden="true">.</span>
+        </h1>
+        <p class="hero-sub" id="tagline"></p>
+        <div class="hero-actions">
+          <a href="#work" class="btn btn--solid">Explore My Work ↓</a>
+          <a id="github-link" href="https://github.com/anfaalresearch" target="_blank" rel="noopener noreferrer" class="btn btn--text">GitHub ↗</a>
+        </div>
+        <div class="hero-tags" aria-label="Focus areas">
+          <span>CS + AI</span><span class="sep" aria-hidden="true">/</span>
+          <span>Open Source</span><span class="sep" aria-hidden="true">/</span>
+          <span>Building in Public</span>
+        </div>
+      </div>
+
+      <!-- Right: 3D interactive photo frame -->
+      <div class="hero-visual" id="heroVisual" data-reveal>
+        <div class="hero-frame" id="heroFrame">
+          <img
+            src="avatar.jpg"
+            alt="Muhammed Anfaal M M, CS-AI student at TKMCE"
+            class="hero-photo"
+            loading="eager"
+            decoding="async"
+          >
+          <span class="frame-tag frame-tag--tl" aria-hidden="true">FORM / 001</span>
+          <span class="frame-tag frame-tag--tr" aria-hidden="true">CURIOSITY ENGINE</span>
+          <span class="frame-tag frame-tag--br" aria-hidden="true">MOVE TO EXPLORE</span>
+          <div class="frame-corner" aria-hidden="true"></div>
+        </div>
+      </div>
+
+    </div>
   </header>
 
-  <main>
-    <!-- About -->
-    <section class="glass-card reveal">
-      <div class="section-label">01 &mdash; WHO I AM</div>
-      <h2>About Me</h2>
-      <p id="bio" class="bio-text"></p>
-    </section>
+  <!-- ── Selected Work ────────────────────────────── -->
+  <section class="section work" id="work">
+    <div class="section-bar" data-reveal>
+      <span class="section-index">01 / SELECTED WORK</span>
+      <span class="section-aside">A few things I've built ↗</span>
+    </div>
+    <div class="projects-grid" id="projects"></div>
+  </section>
 
-    <!-- Skills -->
-    <section class="glass-card reveal">
-      <div class="section-label">02 &mdash; TOOLS &amp; TECH</div>
-      <h2>Skills</h2>
-      <ul id="skills" class="chips"></ul>
-    </section>
+  <!-- ── Toolkit ──────────────────────────────────── -->
+  <section class="section toolkit" id="toolkit">
+    <div class="section-bar" data-reveal>
+      <span class="section-index">02 / TOOLKIT</span>
+      <span class="section-aside" id="skills-inline"></span>
+    </div>
+    <ul class="skills-list" id="skills" data-reveal></ul>
+  </section>
 
-    <!-- Projects -->
-    <section class="reveal">
-      <div class="section-label">03 &mdash; WORK</div>
-      <h2>Featured Projects</h2>
-      <div id="projects" class="grid"></div>
-    </section>
-  </main>
-
-  <footer class="site-footer reveal">
-    <div class="footer-line"></div>
-    <div id="footer"></div>
-    <p class="footer-sub">Built for FOSSSoC-S1 &bull; TKM College of Engineering</p>
+  <!-- ── Footer ───────────────────────────────────── -->
+  <footer class="footer">
+    <div class="footer-copy" id="footer"></div>
+    <div class="footer-right">Built for FOSSSoC-S1 · TKMCE</div>
   </footer>
 
   <script src="script.js"></script>
   <script>
-    // Cursor glow effect
-    const glow = document.getElementById('cursorGlow');
-    let mx = window.innerWidth / 2, my = window.innerHeight / 2;
-    let cx = mx, cy = my;
-    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-    (function animate() {
-      cx += (mx - cx) * 0.08;
-      cy += (my - cy) * 0.08;
-      glow.style.transform = `translate(${cx - 200}px, ${cy - 200}px)`;
-      requestAnimationFrame(animate);
-    })();
+    /* ── Reduced-motion check ── */
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Scroll reveal
-    const observer = new IntersectionObserver(entries => {
+    /* ── Custom cursor (pointer device only) ── */
+    const cur = document.getElementById('cursor');
+    if (window.matchMedia('(pointer: fine)').matches) {
+      let mx = -100, my = -100, cx = -100, cy = -100;
+      document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+      (function tickCursor() {
+        cx += (mx - cx) * 0.1;
+        cy += (my - cy) * 0.1;
+        cur.style.transform = `translate(${cx}px, ${cy}px)`;
+        requestAnimationFrame(tickCursor);
+      })();
+      document.querySelectorAll('a, button, .card').forEach(el => {
+        el.addEventListener('mouseenter', () => cur.classList.add('is-hover'));
+        el.addEventListener('mouseleave', () => cur.classList.remove('is-hover'));
+      });
+    } else {
+      cur.style.display = 'none';
+    }
+
+    /* ── Scroll reveal ── */
+    const ro = new IntersectionObserver(entries => {
       entries.forEach(e => {
         if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          observer.unobserve(e.target);
+          e.target.classList.add('is-visible');
+          ro.unobserve(e.target);
         }
       });
-    }, { threshold: 0.12 });
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    }, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' });
+    window.__ro = ro;
+    document.querySelectorAll('[data-reveal]').forEach(el => ro.observe(el));
+
+    /* ── Hero 3-D tilt (mouse, pointer device only) ── */
+    const frame   = document.getElementById('heroFrame');
+    const visual  = document.getElementById('heroVisual');
+    if (frame && visual && !prefersReducedMotion && window.matchMedia('(pointer: fine)').matches) {
+      let tx = 0, ty = 0, rx = 0, ry = 0;
+      visual.addEventListener('mousemove', e => {
+        const r = visual.getBoundingClientRect();
+        const nx = ((e.clientX - r.left)  / r.width  - 0.5) * 2;
+        const ny = ((e.clientY - r.top)   / r.height - 0.5) * 2;
+        tx = nx; ty = ny;
+      });
+      visual.addEventListener('mouseleave', () => { tx = 0; ty = 0; });
+      (function tickTilt() {
+        rx += (ty * -7 - rx) * 0.09;
+        ry += (tx *  9 - ry) * 0.09;
+        const scale = (Math.abs(tx) + Math.abs(ty)) > 0.05 ? 1.025 : 1;
+        frame.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) scale(${scale})`;
+        requestAnimationFrame(tickTilt);
+      })();
+    }
   </script>
 </body>
-
 </html>
