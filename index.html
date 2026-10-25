@@ -9,55 +9,90 @@
   <title>Muhammed Anfaal M M | Portfolio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <div class="ambient-glow glow-1"></div>
-  <div class="ambient-glow glow-2"></div>
+  <!-- Cursor spotlight -->
+  <div class="cursor-glow" id="cursorGlow"></div>
 
-  <header class="hero">
-    <div class="status-badge">
-      <span class="status-dot"></span> Open to learning &amp; open source
+  <!-- Ambient background orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <!-- Hero -->
+  <header class="hero reveal">
+    <div class="avatar-wrap">
+      <img src="avatar.jpg" alt="Muhammed Anfaal M M" class="avatar-img">
+      <div class="avatar-ring"></div>
     </div>
+
+    <div class="status-badge">
+      <span class="status-dot"></span>
+      Open to learning &amp; open source
+    </div>
+
     <h1 id="name"></h1>
     <p id="tagline"></p>
     <nav id="links"></nav>
   </header>
 
   <main>
-    <section class="section-card">
-      <div class="section-header">
-        <span class="section-icon">✨</span>
-        <h2>About Me</h2>
-      </div>
+    <!-- About -->
+    <section class="glass-card reveal">
+      <div class="section-label">01 &mdash; WHO I AM</div>
+      <h2>About Me</h2>
       <p id="bio" class="bio-text"></p>
     </section>
 
-    <section class="section-card">
-      <div class="section-header">
-        <span class="section-icon">⚡</span>
-        <h2>Skills &amp; Technologies</h2>
-      </div>
+    <!-- Skills -->
+    <section class="glass-card reveal">
+      <div class="section-label">02 &mdash; TOOLS &amp; TECH</div>
+      <h2>Skills</h2>
       <ul id="skills" class="chips"></ul>
     </section>
 
-    <section>
-      <div class="section-header">
-        <span class="section-icon">🚀</span>
-        <h2>Featured Projects</h2>
-      </div>
+    <!-- Projects -->
+    <section class="reveal">
+      <div class="section-label">03 &mdash; WORK</div>
+      <h2>Featured Projects</h2>
       <div id="projects" class="grid"></div>
     </section>
   </main>
 
-  <footer class="site-footer">
+  <footer class="site-footer reveal">
+    <div class="footer-line"></div>
     <div id="footer"></div>
-    <p class="footer-note">Built for FOSSSoC-S1 &bull; T.K.M. College of Engineering</p>
+    <p class="footer-sub">Built for FOSSSoC-S1 &bull; TKM College of Engineering</p>
   </footer>
 
   <script src="script.js"></script>
+  <script>
+    // Cursor glow effect
+    const glow = document.getElementById('cursorGlow');
+    let mx = window.innerWidth / 2, my = window.innerHeight / 2;
+    let cx = mx, cy = my;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+    (function animate() {
+      cx += (mx - cx) * 0.08;
+      cy += (my - cy) * 0.08;
+      glow.style.transform = `translate(${cx - 200}px, ${cy - 200}px)`;
+      requestAnimationFrame(animate);
+    })();
+
+    // Scroll reveal
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
 </body>
 
 </html>
