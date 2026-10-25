@@ -3,8 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Muhammed Anfaal M M — Computer Science & AI student at TKM College of Engineering, Kollam. Building things to understand how they work.">
+  <meta name="description" content="Muhammed Anfaal M M — Computer Science & AI student at TKM College of Engineering, Kollam. Portfolio showcasing FileForge, Lofi-Timer, and DevStarter.">
   <meta name="author" content="Muhammed Anfaal M M">
+  <meta name="theme-color" content="#07080a">
   <title>Muhammed Anfaal M M — TKM College of Engineering</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,18 +14,21 @@
 </head>
 <body>
 
-  <!-- Custom fast cursor -->
+  <!-- Accessible skip-to-content link -->
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <!-- Custom pointer cursor (disabled on touch devices) -->
   <div class="cursor" id="cursor" aria-hidden="true"></div>
 
-  <!-- Animated background: Cyber steel / lime / dark grid (No purple or pink!) -->
+  <!-- Stealth ambient glows: Cyber steel / lime / dark grid (Zero AI slop purple) -->
   <div class="bg-orb bg-orb-1" aria-hidden="true"></div>
   <div class="bg-orb bg-orb-2" aria-hidden="true"></div>
   <div class="bg-orb bg-orb-3" aria-hidden="true"></div>
   <div class="bg-grid"         aria-hidden="true"></div>
 
   <!-- ── Navigation ──────────────────────────────── -->
-  <nav class="nav" role="navigation" aria-label="Main">
-    <a href="#" class="nav-brand" aria-label="Home">
+  <nav class="nav" role="navigation" aria-label="Primary navigation">
+    <a href="#" class="nav-brand" aria-label="Muhammed Anfaal M M — Home">
       <span class="nav-name">MUHAMMED ANFAAL M M</span>
       <span class="nav-college">TKM COLLEGE OF ENGINEERING</span>
     </a>
@@ -33,94 +37,98 @@
       <li><a href="#work">Work</a></li>
       <li><a href="#toolkit">Stack</a></li>
     </ul>
-    <a id="nav-cta" href="https://github.com/anfaalresearch" target="_blank" rel="noopener noreferrer" class="nav-cta">
+    <a id="nav-cta" href="https://github.com/anfaalresearch" target="_blank" rel="noopener noreferrer" class="nav-cta" aria-label="Connect with Anfaal on GitHub (opens in new tab)">
       Let's Connect ↗
     </a>
   </nav>
 
-  <!-- ── Hero ────────────────────────────────────── -->
-  <header class="hero" id="about">
-    <div class="hero-topbar">
-      <div class="hero-identity-badge">
-        <span class="badge-student">MUHAMMED ANFAAL M M</span>
-        <span class="badge-divider">·</span>
-        <span class="badge-college">TKM COLLEGE OF ENGINEERING</span>
-      </div>
-      <div class="hero-status">
-        <span class="status-dot" aria-hidden="true"></span>
-        <span>Open to learning &amp; open source</span>
-      </div>
-      <div class="hero-location" aria-label="Location and year">Kollam, India · 2026</div>
-    </div>
-
-    <div class="hero-grid">
-
-      <!-- Left content -->
-      <div class="hero-content" data-reveal>
-        <div class="hero-pretitle">
-          <span class="pretitle-tag">B.TECH CS-AI</span>
-          <span class="pretitle-college">T.K.M. COLLEGE OF ENGINEERING, KOLLAM</span>
+  <main id="main">
+    <!-- ── Hero ──────────────────────────────────── -->
+    <header class="hero" id="about">
+      <div class="hero-topbar">
+        <div class="hero-identity-badge">
+          <span class="badge-student">MUHAMMED ANFAAL M M</span>
+          <span class="badge-divider">·</span>
+          <span class="badge-college">TKM COLLEGE OF ENGINEERING</span>
         </div>
-        <h1 class="hero-heading">
-          Building things<br>
-          <em>to understand</em><br>
-          how they work<span class="accent-dot" aria-hidden="true">.</span>
-        </h1>
-        <p class="hero-sub" id="tagline">
-          Muhammed Anfaal M M — First-year B.Tech student in Computer Science &amp; Artificial Intelligence at TKM College of Engineering. Learning through practical engineering, Git, and open-source contributions.
-        </p>
-        <div class="hero-actions">
-          <a href="#work" class="btn btn--solid">Explore My Work ↓</a>
-          <a id="github-link" href="https://github.com/anfaalresearch" target="_blank" rel="noopener noreferrer" class="btn btn--text">GitHub ↗</a>
+        <div class="hero-status" aria-label="Availability status">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span>Open to learning &amp; open source</span>
         </div>
-        <div class="hero-tags" aria-label="Focus areas">
-          <span>CS + AI</span><span class="sep" aria-hidden="true">/</span>
-          <span>TKMCE</span><span class="sep" aria-hidden="true">/</span>
-          <span>Open Source</span><span class="sep" aria-hidden="true">/</span>
-          <span>Building in Public</span>
-        </div>
+        <div class="hero-location" aria-label="Location and year">Kollam, India · 2026</div>
       </div>
 
-      <!-- Right: 3D interactive photo frame -->
-      <div class="hero-visual" id="heroVisual" data-reveal>
-        <div class="hero-frame" id="heroFrame">
-          <img
-            src="avatar.jpg"
-            alt="Muhammed Anfaal M M, CS-AI student at TKM College of Engineering"
-            class="hero-photo"
-            loading="eager"
-            decoding="async"
-          >
-          <span class="frame-tag frame-tag--tl" aria-hidden="true">M. ANFAAL</span>
-          <span class="frame-tag frame-tag--tr" aria-hidden="true">TKMCE · CS-AI</span>
-          <span class="frame-tag frame-tag--br" aria-hidden="true">MOVE TO EXPLORE</span>
-          <div class="frame-corner" aria-hidden="true"></div>
+      <div class="hero-grid">
+
+        <!-- Left content -->
+        <div class="hero-content" data-reveal>
+          <div class="hero-pretitle">
+            <span class="pretitle-tag">B.TECH CS-AI</span>
+            <span class="pretitle-college">T.K.M. COLLEGE OF ENGINEERING, KOLLAM</span>
+          </div>
+          <h1 class="hero-heading">
+            Building things<br>
+            <em>to understand</em><br>
+            how they work<span class="accent-dot" aria-hidden="true">.</span>
+          </h1>
+          <p class="hero-sub" id="tagline">
+            Muhammed Anfaal M M — First-year B.Tech student in Computer Science &amp; Artificial Intelligence at TKM College of Engineering. Learning through practical engineering, Git, and open-source contributions.
+          </p>
+          <div class="hero-actions">
+            <a href="#work" class="btn btn--solid">Explore My Work ↓</a>
+            <a id="github-link" href="https://github.com/anfaalresearch" target="_blank" rel="noopener noreferrer" class="btn btn--text" aria-label="View Anfaal's GitHub Profile (opens in new tab)">GitHub ↗</a>
+          </div>
+          <div class="hero-tags" aria-label="Focus areas">
+            <span>CS + AI</span><span class="sep" aria-hidden="true">/</span>
+            <span>TKMCE</span><span class="sep" aria-hidden="true">/</span>
+            <span>Open Source</span><span class="sep" aria-hidden="true">/</span>
+            <span>Building in Public</span>
+          </div>
         </div>
+
+        <!-- Right: 3D interactive photo frame -->
+        <div class="hero-visual" id="heroVisual" data-reveal>
+          <div class="hero-frame" id="heroFrame">
+            <img
+              src="avatar.jpg"
+              alt="Muhammed Anfaal M M, First-year CS-AI student at TKM College of Engineering, Kollam"
+              class="hero-photo"
+              loading="eager"
+              decoding="async"
+              width="600"
+              height="600"
+            >
+            <span class="frame-tag frame-tag--tl" aria-hidden="true">M. ANFAAL</span>
+            <span class="frame-tag frame-tag--tr" aria-hidden="true">TKMCE · CS-AI</span>
+            <span class="frame-tag frame-tag--br" aria-hidden="true">MOVE TO EXPLORE</span>
+            <div class="frame-corner" aria-hidden="true"></div>
+          </div>
+        </div>
+
       </div>
+    </header>
 
-    </div>
-  </header>
+    <!-- ── Selected Work ──────────────────────────── -->
+    <section class="section work" id="work" aria-label="Selected Projects">
+      <div class="section-bar" data-reveal>
+        <span class="section-index">01 / SELECTED WORK</span>
+        <span class="section-aside">A few things I've built ↗</span>
+      </div>
+      <div class="projects-grid" id="projects"></div>
+    </section>
 
-  <!-- ── Selected Work ────────────────────────────── -->
-  <section class="section work" id="work">
-    <div class="section-bar" data-reveal>
-      <span class="section-index">01 / SELECTED WORK</span>
-      <span class="section-aside">A few things I've built ↗</span>
-    </div>
-    <div class="projects-grid" id="projects"></div>
-  </section>
+    <!-- ── Toolkit ────────────────────────────────── -->
+    <section class="section toolkit" id="toolkit" aria-label="Technical Skills">
+      <div class="section-bar" data-reveal>
+        <span class="section-index">02 / TOOLKIT</span>
+        <span class="section-aside">Core Technologies</span>
+      </div>
+      <ul class="skills-list" id="skills" data-reveal></ul>
+    </section>
+  </main>
 
-  <!-- ── Toolkit ──────────────────────────────────── -->
-  <section class="section toolkit" id="toolkit">
-    <div class="section-bar" data-reveal>
-      <span class="section-index">02 / TOOLKIT</span>
-      <span class="section-aside">Core Technologies</span>
-    </div>
-    <ul class="skills-list" id="skills" data-reveal></ul>
-  </section>
-
-  <!-- ── Footer ───────────────────────────────────── -->
-  <footer class="footer">
+  <!-- ── Footer ─────────────────────────────────── -->
+  <footer class="footer" role="contentinfo">
     <div class="footer-copy">
       <span id="footer"></span> · <span class="footer-author">Muhammed Anfaal M M</span>
     </div>
@@ -129,51 +137,73 @@
 
   <script src="script.js"></script>
   <script>
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    (function () {
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
 
-    /* ── Custom cursor — direct tracking, zero lag ── */
-    const cur = document.getElementById('cursor');
-    if (window.matchMedia('(pointer: fine)').matches) {
-      document.addEventListener('mousemove', e => {
-        cur.style.left = e.clientX + 'px';
-        cur.style.top  = e.clientY + 'px';
-      });
-      document.querySelectorAll('a, button, .card').forEach(el => {
-        el.addEventListener('mouseenter', () => cur.classList.add('is-hover'));
-        el.addEventListener('mouseleave', () => cur.classList.remove('is-hover'));
-      });
-    } else {
-      cur.style.display = 'none';
-    }
+      /* ── Custom cursor with event delegation (zero lag, handles dynamic elements) ── */
+      const cur = document.getElementById('cursor');
+      if (cur && hasFinePointer) {
+        document.addEventListener('mousemove', function (e) {
+          cur.style.left = e.clientX + 'px';
+          cur.style.top  = e.clientY + 'px';
+        });
 
-    /* ── Scroll reveal ── */
-    const ro = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) { e.target.classList.add('is-visible'); ro.unobserve(e.target); }
-      });
-    }, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' });
-    window.__ro = ro;
-    document.querySelectorAll('[data-reveal]').forEach(el => ro.observe(el));
+        document.addEventListener('mouseover', function (e) {
+          if (e.target.closest('a, button, .card, [role="button"]')) {
+            cur.classList.add('is-hover');
+          } else {
+            cur.classList.remove('is-hover');
+          }
+        });
 
-    /* ── Hero 3-D tilt ── */
-    const frame  = document.getElementById('heroFrame');
-    const visual = document.getElementById('heroVisual');
-    if (frame && visual && !prefersReducedMotion && window.matchMedia('(pointer: fine)').matches) {
-      let tx = 0, ty = 0, rx = 0, ry = 0;
-      visual.addEventListener('mousemove', e => {
-        const r = visual.getBoundingClientRect();
-        tx = ((e.clientX - r.left)  / r.width  - 0.5) * 2;
-        ty = ((e.clientY - r.top)   / r.height - 0.5) * 2;
-      });
-      visual.addEventListener('mouseleave', () => { tx = 0; ty = 0; });
-      (function tickTilt() {
-        rx += (ty * -7 - rx) * 0.09;
-        ry += (tx *  9 - ry) * 0.09;
-        const scale = (Math.abs(tx) + Math.abs(ty)) > 0.05 ? 1.025 : 1;
-        frame.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) scale(${scale})`;
-        requestAnimationFrame(tickTilt);
-      })();
-    }
+        document.addEventListener('mouseleave', function () {
+          cur.style.opacity = '0';
+        });
+        document.addEventListener('mouseenter', function () {
+          cur.style.opacity = '1';
+        });
+      } else if (cur) {
+        cur.style.display = 'none';
+      }
+
+      /* ── Scroll reveal observer ── */
+      if ('IntersectionObserver' in window) {
+        const ro = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) {
+              e.target.classList.add('is-visible');
+              ro.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' });
+        window.__ro = ro;
+        document.querySelectorAll('[data-reveal]').forEach(function (el) { ro.observe(el); });
+      } else {
+        // Fallback for older browsers
+        document.querySelectorAll('[data-reveal]').forEach(function (el) { el.classList.add('is-visible'); });
+      }
+
+      /* ── Hero 3-D tilt ── */
+      const frame  = document.getElementById('heroFrame');
+      const visual = document.getElementById('heroVisual');
+      if (frame && visual && !prefersReducedMotion && hasFinePointer) {
+        let tx = 0, ty = 0, rx = 0, ry = 0;
+        visual.addEventListener('mousemove', function (e) {
+          const r = visual.getBoundingClientRect();
+          tx = ((e.clientX - r.left)  / r.width  - 0.5) * 2;
+          ty = ((e.clientY - r.top)   / r.height - 0.5) * 2;
+        });
+        visual.addEventListener('mouseleave', function () { tx = 0; ty = 0; });
+        (function tickTilt() {
+          rx += (ty * -7 - rx) * 0.09;
+          ry += (tx *  9 - ry) * 0.09;
+          const scale = (Math.abs(tx) + Math.abs(ty)) > 0.05 ? 1.025 : 1;
+          frame.style.transform = 'perspective(900px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg) scale(' + scale + ')';
+          requestAnimationFrame(tickTilt);
+        })();
+      }
+    })();
   </script>
 </body>
 </html>

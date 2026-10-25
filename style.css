@@ -2,13 +2,14 @@
    MUHAMMED ANFAAL M M — TKM COLLEGE OF ENGINEERING
    Art-directed engineering portfolio  ·  Cyber-steel & Lime
    Zero AI slop  ·  Pure developer craftsmanship
+   100% Responsive  ·  Zero Console Errors  ·  Full A11y
    ═══════════════════════════════════════════════════════ */
 
 :root {
   --sans:         'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
   --serif:        'DM Serif Display', Georgia, serif;
 
-  /* Stealth dark architecture — no purple or pink! */
+  /* Stealth dark architecture */
   --bg:           #07080a;
   --surface:      #0f1115;
   --surface-hi:   #15181e;
@@ -51,9 +52,34 @@ img   { display: block; max-width: 100%; }
 a     { color: inherit; text-decoration: none; }
 ul    { list-style: none; }
 
-/* ── Stealth Animated Background ───────────────────── */
+/* ── Accessibility: Keyboard Focus & Skip Link ──────── */
+:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
 
-/* Technical ambient glows (Clean Lime & Deep Ocean Steel — NO purple/pink) */
+.skip-link {
+  position: absolute;
+  top: -120px;
+  left: 20px;
+  padding: 10px 18px;
+  background: var(--green);
+  color: #07080a;
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  z-index: 10000;
+  border-radius: 4px;
+  transition: top 0.2s ease;
+  text-decoration: none;
+}
+.skip-link:focus {
+  top: 14px;
+}
+
+/* ── Stealth Animated Background ───────────────────── */
 .bg-orb {
   position: fixed;
   border-radius: 50%;
@@ -94,7 +120,6 @@ ul    { list-style: none; }
   100% { transform: translate(50px, -70px) scale(1.1); }
 }
 
-/* Technical dot-grid matrix */
 .bg-grid {
   position: fixed;
   inset: 0;
@@ -118,7 +143,8 @@ ul    { list-style: none; }
     width .22s var(--ease),
     height .22s var(--ease),
     background .22s var(--ease),
-    border-color .22s var(--ease);
+    border-color .22s var(--ease),
+    opacity .22s ease;
 }
 .cursor.is-hover {
   width: 48px; height: 48px;
@@ -173,6 +199,7 @@ ul    { list-style: none; }
   background: var(--green-bg);
   border: 1px solid var(--border-green);
   border-radius: 999px;
+  white-space: nowrap;
 }
 
 .nav-links { display: flex; gap: 36px; }
@@ -197,6 +224,7 @@ ul    { list-style: none; }
   color: var(--green);
   border-radius: 4px;
   cursor: none;
+  white-space: nowrap;
   transition: all .2s var(--ease);
 }
 .nav-cta:hover {
@@ -269,6 +297,7 @@ ul    { list-style: none; }
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 999px;
+  flex-wrap: wrap;
 }
 .badge-student { font-weight: 700; color: var(--fg); }
 .badge-divider { color: var(--dim); }
@@ -301,7 +330,6 @@ ul    { list-style: none; }
   align-items: center;
 }
 
-/* Hero Content (Left) */
 .hero-pretitle {
   display: flex;
   align-items: center;
@@ -421,7 +449,6 @@ ul    { list-style: none; }
   will-change: transform;
 }
 
-/* 1:1 true natural proportion — no stretching */
 .hero-photo {
   width: 100%;
   aspect-ratio: 1 / 1;
@@ -490,7 +517,6 @@ ul    { list-style: none; }
   box-shadow: 0 20px 48px rgba(0, 0, 0, 0.55);
 }
 
-/* Preview area */
 .card-preview {
   position: relative;
   background: var(--surface-hi);
@@ -519,7 +545,6 @@ ul    { list-style: none; }
   opacity: .45;
 }
 
-/* Card Body */
 .card-body {
   padding: 22px 24px 24px;
   display: flex;
@@ -599,7 +624,6 @@ ul    { list-style: none; }
   z-index: 1;
 }
 
-/* FileForge Preview */
 .prev-fileforge { font-size: 0.7rem; color: var(--muted); }
 .ff-header { margin-bottom: 4px; }
 .ff-logo {
@@ -664,7 +688,6 @@ ul    { list-style: none; }
   100% { width: 80%; }
 }
 
-/* Lofi-Timer Preview */
 .prev-timer {
   align-items: center;
   justify-content: center;
@@ -721,7 +744,6 @@ ul    { list-style: none; }
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* DevStarter Preview */
 .prev-devstarter { gap: 6px; }
 .ds-search {
   font-size: 0.62rem;
@@ -812,32 +834,48 @@ ul    { list-style: none; }
   color: var(--muted);
 }
 
-/* ── Responsive ──────────────────────────────────────── */
+/* ── Responsive & Touch Adaptations ─────────────────── */
+@media (hover: none), (pointer: coarse) {
+  body { cursor: auto !important; }
+  .cursor { display: none !important; }
+  a, button, .card, [role="button"] { cursor: pointer !important; }
+}
+
 @media (max-width: 820px) {
   body { cursor: auto; }
   .cursor { display: none; }
   .nav-links { display: none; }
   .nav { padding: 0 clamp(16px, 5vw, 32px); }
 
-  .hero-grid { grid-template-columns: 1fr; gap: 44px; }
+  .hero-grid { grid-template-columns: 1fr; gap: 40px; }
   .hero-visual { order: -1; }
-  .hero-frame { width: min(300px, 85vw); margin: 0 auto; }
+  .hero-frame { width: min(300px, 80vw); margin: 0 auto; }
   .frame-tag--tr { display: none; }
   .hero-heading { font-size: clamp(2.2rem, 9.5vw, 3.4rem); }
 
   .projects-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
   .card--featured, .card--small { grid-column: 1; grid-row: auto; }
-  .card--featured .card-preview { height: 200px; }
+  .card--featured .card-preview { height: 210px; }
 
-  .footer { flex-direction: column; text-align: center; }
+  .footer { flex-direction: column; text-align: center; gap: 8px; }
+}
+
+@media (max-width: 640px) {
+  .nav-college { display: none; }
+  .hero-topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
 }
 
 @media (max-width: 480px) {
   .hero-actions { gap: 14px; }
+  .hero-pretitle { flex-wrap: wrap; }
   .skills-list li { font-size: clamp(1.4rem, 8vw, 2rem); }
 }
 
-/* ── Reduced Motion ──────────────────────────────────── */
+/* ── Reduced Motion Accessibility ───────────────────── */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
