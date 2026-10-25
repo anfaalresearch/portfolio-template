@@ -3,11 +3,10 @@
     "tagline": "First-year B.Tech student exploring computer science and AI",
     "bio": "I am a first-year B.Tech student studying Computer Science and Artificial Intelligence at T.K.M. College of Engineering, Kollam. I am building my foundations in coding, Git, and open-source collaboration while learning through small projects and practical contributions.",
     "skills": [
+        "C++",
         "HTML",
         "CSS",
-        "C++",
-        "Git",
-        "GitHub"
+        "Git"
     ],
     "projects": [
         {

@@ -2,7 +2,8 @@
    MUHAMMED ANFAAL M M — TKM COLLEGE OF ENGINEERING
    Art-directed engineering portfolio  ·  Cyber-steel & Lime
    Zero AI slop  ·  Pure developer craftsmanship
-   100% Responsive  ·  Zero Console Errors  ·  Full A11y
+   100% Mobile Optimized (60fps/120Hz smooth scrolling)
+   Zero Console Errors  ·  Full A11y
    ═══════════════════════════════════════════════════════ */
 
 :root {
@@ -11,8 +12,8 @@
 
   /* Stealth dark architecture */
   --bg:           #07080a;
-  --surface:      #0f1115;
-  --surface-hi:   #15181e;
+  --surface:      #0e1014;
+  --surface-hi:   #14171d;
   --border:       rgba(255, 255, 255, 0.08);
   --border-hi:    rgba(255, 255, 255, 0.18);
   --border-green: rgba(200, 245, 66, 0.35);
@@ -37,18 +38,23 @@
 
 /* ── Reset ─────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html  { font-size: 16px; scroll-behavior: smooth; }
-body  {
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+body {
   font-family: var(--sans);
   background-color: var(--bg);
   color: var(--fg);
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
-  cursor: none;
   position: relative;
+  width: 100%;
 }
-img   { display: block; max-width: 100%; }
+img   { display: block; max-width: 100%; height: auto; }
 a     { color: inherit; text-decoration: none; }
 ul    { list-style: none; }
 
@@ -79,45 +85,45 @@ ul    { list-style: none; }
   top: 14px;
 }
 
-/* ── Stealth Animated Background ───────────────────── */
+/* ── Desktop Ambient Background (GPU-friendly) ─────── */
 .bg-orb {
   position: fixed;
   border-radius: 50%;
-  filter: blur(100px);
+  filter: blur(80px);
   pointer-events: none;
   z-index: 0;
   will-change: transform;
 }
 .bg-orb-1 {
-  width: 580px; height: 580px;
-  top: -100px; left: -80px;
-  background: radial-gradient(circle, rgba(200, 245, 66, 0.045) 0%, transparent 70%);
-  animation: orb-drift-1 20s ease-in-out infinite alternate;
+  width: 500px; height: 500px;
+  top: -80px; left: -60px;
+  background: radial-gradient(circle, rgba(200, 245, 66, 0.04) 0%, transparent 70%);
+  animation: orb-drift-1 22s ease-in-out infinite alternate;
 }
 .bg-orb-2 {
-  width: 520px; height: 520px;
-  top: 35vh; right: -90px;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.04) 0%, transparent 70%);
-  animation: orb-drift-2 24s ease-in-out infinite alternate;
+  width: 450px; height: 450px;
+  top: 35vh; right: -70px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.035) 0%, transparent 70%);
+  animation: orb-drift-2 26s ease-in-out infinite alternate;
 }
 .bg-orb-3 {
-  width: 400px; height: 400px;
+  width: 360px; height: 360px;
   bottom: 8vh; left: 20%;
   background: radial-gradient(circle, rgba(255, 255, 255, 0.02) 0%, transparent 70%);
   animation: orb-drift-3 30s ease-in-out infinite alternate;
 }
 
 @keyframes orb-drift-1 {
-  0%   { transform: translate(0, 0) scale(1); }
-  100% { transform: translate(70px, 90px) scale(1.12); }
+  0%   { transform: translate(0, 0); }
+  100% { transform: translate(50px, 60px); }
 }
 @keyframes orb-drift-2 {
-  0%   { transform: translate(0, 0) scale(1); }
-  100% { transform: translate(-60px, 70px) scale(0.92); }
+  0%   { transform: translate(0, 0); }
+  100% { transform: translate(-40px, 50px); }
 }
 @keyframes orb-drift-3 {
-  0%   { transform: translate(0, 0) scale(1); }
-  100% { transform: translate(50px, -70px) scale(1.1); }
+  0%   { transform: translate(0, 0); }
+  100% { transform: translate(40px, -50px); }
 }
 
 .bg-grid {
@@ -125,7 +131,7 @@ ul    { list-style: none; }
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
   background-size: 28px 28px;
 }
 
@@ -155,8 +161,8 @@ ul    { list-style: none; }
 /* ── Scroll Reveal ──────────────────────────────────── */
 [data-reveal] {
   opacity: 0;
-  transform: translateY(20px);
-  transition: opacity .65s var(--ease), transform .65s var(--ease);
+  transform: translateY(18px);
+  transition: opacity .55s var(--ease), transform .55s var(--ease);
 }
 [data-reveal].is-visible { opacity: 1; transform: none; }
 
@@ -171,16 +177,15 @@ ul    { list-style: none; }
   padding: 0 var(--pad-x);
   height: 64px;
   border-bottom: 1px solid var(--border);
-  background: rgba(7, 8, 10, 0.88);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  background: rgba(7, 8, 10, 0.9);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
 .nav-brand {
   display: flex;
   align-items: center;
   gap: 12px;
-  cursor: none;
 }
 .nav-name {
   font-family: var(--sans);
@@ -209,7 +214,6 @@ ul    { list-style: none; }
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--muted);
-  cursor: none;
   transition: color .2s;
 }
 .nav-links a:hover { color: var(--fg); }
@@ -223,14 +227,13 @@ ul    { list-style: none; }
   border: 1.5px solid var(--green);
   color: var(--green);
   border-radius: 4px;
-  cursor: none;
   white-space: nowrap;
   transition: all .2s var(--ease);
 }
 .nav-cta:hover {
   background: var(--green);
   color: #07080a;
-  box-shadow: 0 0 20px var(--green-glow);
+  box-shadow: 0 0 16px var(--green-glow);
 }
 
 /* ── Shared section wrapper ─────────────────────────── */
@@ -282,7 +285,7 @@ ul    { list-style: none; }
   align-items: center;
   flex-wrap: wrap;
   gap: 14px;
-  margin-bottom: clamp(28px, 4.5vw, 48px);
+  margin-bottom: clamp(28px, 4vw, 44px);
   font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.12em;
@@ -357,11 +360,11 @@ ul    { list-style: none; }
 
 .hero-heading {
   font-family: var(--sans);
-  font-size: clamp(2.6rem, 5vw, 4.8rem);
+  font-size: clamp(2.5rem, 5vw, 4.6rem);
   font-weight: 700;
   letter-spacing: -0.03em;
-  line-height: 1.05;
-  margin-bottom: 22px;
+  line-height: 1.06;
+  margin-bottom: 20px;
 }
 .hero-heading em {
   font-family: var(--serif);
@@ -377,7 +380,7 @@ ul    { list-style: none; }
   color: var(--muted);
   line-height: 1.7;
   max-width: 480px;
-  margin-bottom: 34px;
+  margin-bottom: 32px;
 }
 
 .hero-actions {
@@ -385,7 +388,7 @@ ul    { list-style: none; }
   flex-wrap: wrap;
   gap: 18px;
   align-items: center;
-  margin-bottom: 34px;
+  margin-bottom: 32px;
 }
 .btn {
   font-family: var(--sans);
@@ -393,7 +396,6 @@ ul    { list-style: none; }
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  cursor: none;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -409,7 +411,7 @@ ul    { list-style: none; }
 .btn--solid:hover {
   background: transparent;
   color: var(--green);
-  box-shadow: 0 0 24px var(--green-glow);
+  box-shadow: 0 0 20px var(--green-glow);
 }
 .btn--text {
   background: none;
@@ -443,7 +445,7 @@ ul    { list-style: none; }
 }
 .hero-frame {
   position: relative;
-  width: min(100%, 390px);
+  width: min(100%, 380px);
   border-radius: 14px;
   transition: transform .1s ease-out;
   will-change: transform;
@@ -467,12 +469,12 @@ ul    { list-style: none; }
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--muted);
-  background: rgba(7, 8, 10, 0.78);
+  background: rgba(7, 8, 10, 0.82);
   border: 1px solid var(--border);
   border-radius: 4px;
   padding: 4px 9px;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   white-space: nowrap;
 }
 .frame-tag--tl { top: 16px; left: 16px; color: var(--fg); font-weight: 700; }
@@ -493,7 +495,7 @@ ul    { list-style: none; }
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: auto auto;
-  gap: 14px;
+  gap: 16px;
 }
 .card--featured { grid-column: 1; grid-row: 1 / 3; }
 .card--small    { grid-column: 2; }
@@ -505,7 +507,6 @@ ul    { list-style: none; }
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  cursor: none;
   transition:
     border-color .28s var(--ease),
     transform .28s var(--ease),
@@ -514,7 +515,7 @@ ul    { list-style: none; }
 .card:hover {
   border-color: var(--border-hi);
   transform: translateY(-4px);
-  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
 }
 
 .card-preview {
@@ -834,7 +835,10 @@ ul    { list-style: none; }
   color: var(--muted);
 }
 
-/* ── Responsive & Touch Adaptations ─────────────────── */
+/* ═══════════════════════════════════════════════════════
+   ULTRA-SMOOTH MOBILE OPTIMIZATIONS (Eliminate Choppiness)
+   ═══════════════════════════════════════════════════════ */
+
 @media (hover: none), (pointer: coarse) {
   body { cursor: auto !important; }
   .cursor { display: none !important; }
@@ -842,37 +846,173 @@ ul    { list-style: none; }
 }
 
 @media (max-width: 820px) {
-  body { cursor: auto; }
-  .cursor { display: none; }
-  .nav-links { display: none; }
-  .nav { padding: 0 clamp(16px, 5vw, 32px); }
+  /* 1. Turn off expensive GPU filters & orbs for butter-smooth 120Hz scroll */
+  .bg-orb {
+    display: none !important;
+  }
+  .bg-grid {
+    opacity: 0.6;
+  }
+  .nav {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: #07080a !important;
+    padding: 0 18px;
+    height: 58px;
+  }
+  .nav-links {
+    display: none !important;
+  }
+  .nav-college {
+    display: none !important;
+  }
 
-  .hero-grid { grid-template-columns: 1fr; gap: 40px; }
-  .hero-visual { order: -1; }
-  .hero-frame { width: min(300px, 80vw); margin: 0 auto; }
-  .frame-tag--tr { display: none; }
-  .hero-heading { font-size: clamp(2.2rem, 9.5vw, 3.4rem); }
-
-  .projects-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
-  .card--featured, .card--small { grid-column: 1; grid-row: auto; }
-  .card--featured .card-preview { height: 210px; }
-
-  .footer { flex-direction: column; text-align: center; gap: 8px; }
-}
-
-@media (max-width: 640px) {
-  .nav-college { display: none; }
+  /* 2. Fix the Hero: Compact, spacious & proportionate */
+  .hero {
+    padding: 76px 18px 36px !important;
+    min-height: auto !important;
+  }
   .hero-topbar {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    text-align: center;
     gap: 8px;
+    margin-bottom: 22px;
+  }
+  .hero-identity-badge {
+    justify-content: center;
+    padding: 4px 10px;
+    font-size: 0.65rem;
+  }
+  .hero-location {
+    font-size: 0.62rem;
+  }
+
+  .hero-grid {
+    grid-template-columns: 1fr !important;
+    gap: 22px !important;
+    text-align: center;
+  }
+
+  /* Place photo nicely above headline as an elegant compact avatar card */
+  .hero-visual {
+    order: -1;
+    margin: 0 auto;
+  }
+  .hero-frame {
+    width: 130px !important;
+    height: 130px !important;
+    border-radius: 20px !important;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+    border: 2px solid rgba(200, 245, 66, 0.4);
+    transform: none !important;
+  }
+  .hero-photo {
+    width: 130px !important;
+    height: 130px !important;
+    border-radius: 18px !important;
+    border: none !important;
+  }
+
+  /* Hide crowding edge-tags on mobile */
+  .frame-tag {
+    display: none !important;
+  }
+  .frame-corner {
+    display: none !important;
+  }
+
+  .hero-pretitle {
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+  .pretitle-tag {
+    font-size: 0.6rem;
+  }
+  .pretitle-college {
+    font-size: 0.65rem;
+  }
+
+  .hero-heading {
+    font-size: clamp(2rem, 8.5vw, 2.6rem) !important;
+    line-height: 1.1 !important;
+    margin-bottom: 14px !important;
+  }
+  .hero-sub {
+    font-size: 0.92rem !important;
+    line-height: 1.62 !important;
+    margin: 0 auto 20px !important;
+  }
+  .hero-actions {
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .btn--solid {
+    padding: 10px 20px;
+    font-size: 0.72rem;
+  }
+  .hero-tags {
+    justify-content: center;
+    font-size: 0.64rem;
+  }
+
+  /* 3. Projects on Mobile: Clean vertical stack */
+  .section {
+    padding: 44px 18px !important;
+  }
+  .section-bar {
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+  }
+  .projects-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  .card--featured, .card--small {
+    grid-column: 1 !important;
+    grid-row: auto !important;
+  }
+  .card--featured .card-preview {
+    height: 180px !important;
+  }
+  .card--small .card-preview {
+    height: 125px !important;
+  }
+  .card-body {
+    padding: 18px !important;
+  }
+  .card-title {
+    font-size: 1.2rem !important;
+  }
+
+  /* 4. Skills on Mobile */
+  .skills-list {
+    justify-content: center;
+    row-gap: 6px;
+  }
+  .skills-list li {
+    font-size: clamp(1.5rem, 6.5vw, 2.2rem) !important;
+  }
+
+  .footer {
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+    padding: 24px 18px !important;
   }
 }
 
 @media (max-width: 480px) {
-  .hero-actions { gap: 14px; }
-  .hero-pretitle { flex-wrap: wrap; }
-  .skills-list li { font-size: clamp(1.4rem, 8vw, 2rem); }
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+  }
+  .btn--solid {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 /* ── Reduced Motion Accessibility ───────────────────── */
