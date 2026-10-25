@@ -66,10 +66,12 @@ const PREVIEWS = [
 fetch('profile.json')
   .then(r => r.json())
   .then(p => {
-    document.title = `${p.name} — Portfolio`;
+    document.title = `${p.name} — TKM College of Engineering`;
 
     const tEl = $('tagline');
-    if (tEl) tEl.textContent = p.tagline;
+    if (tEl) {
+      tEl.innerHTML = `<strong style="color:var(--fg);">${esc(p.name)}</strong> — First-year B.Tech student in Computer Science &amp; Artificial Intelligence at <strong style="color:var(--green);">T.K.M. College of Engineering, Kollam</strong>. Learning through practical engineering, Git, and open-source contributions.`;
+    }
 
     const gh = p.links?.github || '#';
     ['nav-cta', 'github-link'].forEach(id => { const el = $(id); if (el) el.href = gh; });
