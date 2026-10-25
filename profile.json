@@ -1,19 +1,33 @@
 {
-    "name": "Your Name",
-    "tagline": "Your one-line introduction",
-    "bio": "Write 2 or 3 sentences about yourself.",
+    "name": "MUHAMMED ANFAAL M M",
+    "tagline": "First-year B.Tech student exploring computer science and AI",
+    "bio": "I am a first-year B.Tech student studying Computer Science and Artificial Intelligence at T.K.M. College of Engineering, Kollam. I am building my foundations in coding, Git, and open-source collaboration while learning through small projects and practical contributions.",
     "skills": [
+        "HTML",
+        "CSS",
+        "C++",
         "Git",
-        "HTML"
+        "GitHub"
     ],
     "projects": [
         {
-            "title": "My first project",
-            "desc": "What it does.",
-            "link": "https://github.com/yourname"
+            "title": "FileForge",
+            "desc": "A privacy-first browser toolkit for converting, resizing, compressing, cropping, and inspecting files without uploading them.",
+            "link": "https://anfaalresearch.github.io/FileForge/"
+        },
+        {
+            "title": "Lofi-Timer",
+            "desc": "A privacy-first study timer with subjects, tasks, goals, streaks, statistics, session history, and local data storage.",
+            "link": "https://github.com/anfaalresearch/Lofi-Timer"
+        },
+        {
+            "title": "DevStarter",
+            "desc": "A beginner-friendly directory of free resources for people learning to code. I contributed a reusable external-link helper to improve the project structure.",
+            "link": "https://github.com/anfaalresearch/devstarter"
         }
     ],
     "links": {
-        "github": "https://github.com/yourname"
+        "github": "https://github.com/anfaalresearch",
+        "linkedin": "https://www.linkedin.com/in/anfaaltech"
     }
 }
