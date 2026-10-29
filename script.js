@@ -73,8 +73,17 @@ fetch('profile.json')
       tEl.innerHTML = `<strong style="color:var(--fg);">${esc(p.name)}</strong> — First-year B.Tech student in Computer Science &amp; Artificial Intelligence at <strong style="color:var(--green);">T.K.M. College of Engineering, Kollam</strong>. Learning through practical engineering, Git, and open-source contributions.`;
     }
 
-    const gh = p.links?.github || '#';
-    ['nav-cta', 'github-link'].forEach(id => { const el = $(id); if (el) el.href = gh; });
+    const gh = p.links?.github || 'https://github.com/anfaalresearch';
+    const li = p.links?.linkedin || 'https://www.linkedin.com/in/anfaaltech/';
+    
+    const ghLink = $('github-link');
+    if (ghLink) ghLink.href = gh;
+
+    const liLink = $('linkedin-link');
+    if (liLink) liLink.href = li;
+
+    const navCta = $('nav-cta');
+    if (navCta) navCta.href = li;
 
     const fEl = $('footer');
     if (fEl) fEl.textContent = `© ${new Date().getFullYear()} ${p.name}`;

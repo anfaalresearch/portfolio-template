@@ -17,27 +17,29 @@
   <!-- Accessible skip-to-content link -->
   <a href="#main" class="skip-link">Skip to main content</a>
 
-  <!-- Custom pointer cursor (disabled on touch devices) -->
+  <!-- Custom pointer cursor (fine pointer devices only) -->
   <div class="cursor" id="cursor" aria-hidden="true"></div>
 
-  <!-- Stealth ambient glows: Cyber steel / lime / dark grid (Zero AI slop purple) -->
-  <div class="bg-orb bg-orb-1" aria-hidden="true"></div>
-  <div class="bg-orb bg-orb-2" aria-hidden="true"></div>
-  <div class="bg-orb bg-orb-3" aria-hidden="true"></div>
-  <div class="bg-grid"         aria-hidden="true"></div>
+  <!-- Interactive Moving Particle Constellation Canvas -->
+  <canvas id="bg-canvas" class="bg-canvas" aria-hidden="true"></canvas>
+
+  <!-- Technical matrix grid overlay -->
+  <div class="bg-grid" aria-hidden="true"></div>
 
   <!-- ── Navigation ──────────────────────────────── -->
   <nav class="nav" role="navigation" aria-label="Primary navigation">
     <a href="#" class="nav-brand" aria-label="Muhammed Anfaal M M — Home">
       <span class="nav-name">MUHAMMED ANFAAL M M</span>
-      <span class="nav-college">TKM COLLEGE OF ENGINEERING</span>
+      <span class="nav-college">TKMCE · CS-AI</span>
     </a>
     <ul class="nav-links" role="list">
       <li><a href="#about">About</a></li>
       <li><a href="#work">Work</a></li>
+      <li><a href="#journey">Journey</a></li>
       <li><a href="#toolkit">Stack</a></li>
+      <li><a href="#contact">Contact</a></li>
     </ul>
-    <a id="nav-cta" href="https://github.com/anfaalresearch" target="_blank" rel="noopener noreferrer" class="nav-cta" aria-label="Connect with Anfaal on GitHub (opens in new tab)">
+    <a id="nav-cta" href="https://www.linkedin.com/in/anfaaltech/" target="_blank" rel="noopener noreferrer" class="nav-cta" aria-label="Connect with Anfaal on LinkedIn (opens in new tab)">
       Let's Connect ↗
     </a>
   </nav>
@@ -53,9 +55,9 @@
         </div>
         <div class="hero-status" aria-label="Availability status">
           <span class="status-dot" aria-hidden="true"></span>
-          <span>Open to learning &amp; open source</span>
+          <span>Open to collaborations &amp; learning</span>
         </div>
-        <div class="hero-location" aria-label="Location and year">Kollam, India · 2026</div>
+        <div class="hero-location" aria-label="Location and year">Kozhikode &bull; Kollam, India · 2026</div>
       </div>
 
       <div class="hero-grid">
@@ -76,13 +78,15 @@
           </p>
           <div class="hero-actions">
             <a href="#work" class="btn btn--solid">Explore My Work ↓</a>
+            <a id="linkedin-link" href="https://www.linkedin.com/in/anfaaltech/" target="_blank" rel="noopener noreferrer" class="btn btn--outline" aria-label="View Anfaal's LinkedIn Profile (opens in new tab)">LinkedIn ↗</a>
             <a id="github-link" href="https://github.com/anfaalresearch" target="_blank" rel="noopener noreferrer" class="btn btn--text" aria-label="View Anfaal's GitHub Profile (opens in new tab)">GitHub ↗</a>
           </div>
           <div class="hero-tags" aria-label="Focus areas">
             <span>CS + AI</span><span class="sep" aria-hidden="true">/</span>
             <span>TKMCE</span><span class="sep" aria-hidden="true">/</span>
-            <span>Open Source</span><span class="sep" aria-hidden="true">/</span>
-            <span>Building in Public</span>
+            <span>KERALA</span><span class="sep" aria-hidden="true">/</span>
+            <span>OPEN SOURCE</span><span class="sep" aria-hidden="true">/</span>
+            <span>BUILDING IN PUBLIC</span>
           </div>
         </div>
 
@@ -117,13 +121,106 @@
       <div class="projects-grid" id="projects"></div>
     </section>
 
+    <!-- ── Journey & Background ───────────────────── -->
+    <section class="section journey" id="journey" aria-label="Background & Journey">
+      <div class="section-bar" data-reveal>
+        <span class="section-index">02 / ABOUT &amp; JOURNEY</span>
+        <span class="section-aside">The Story &amp; Direction</span>
+      </div>
+
+      <div class="journey-grid" data-reveal>
+        <div class="journey-card journey-card--story">
+          <div class="card-meta">
+            <span class="card-cat">BACKGROUND &amp; PHILOSOPHY</span>
+            <span class="card-num">TKMCE '26</span>
+          </div>
+          <h3 class="journey-title">First-Year Engineer &amp; Aspiring AI Specialist</h3>
+          <p class="journey-desc">
+            Originally from <strong>Kozhikode, Kerala</strong>, I am currently pursuing my B.Tech in <strong>Computer Science &amp; Artificial Intelligence</strong> at the renowned <strong>T.K.M. College of Engineering, Kollam</strong>. 
+          </p>
+          <p class="journey-desc">
+            I am at the exciting starting line of my tech journey. My focus is centered on mastering low-level programming fundamentals in C/C++, sharpening algorithmic problem solving, and architecting privacy-first browser utilities without server bloat.
+          </p>
+          <div class="journey-quote">
+            <em>&ldquo;Every expert was once a beginner. Let's learn and grow together.&rdquo;</em>
+          </div>
+        </div>
+
+        <div class="journey-card journey-card--details">
+          <div class="card-meta">
+            <span class="card-cat">QUICK FACTS &amp; STATUS</span>
+            <span class="card-num">INFO</span>
+          </div>
+          <div class="info-list">
+            <div class="info-item">
+              <span class="info-label">INSTITUTION</span>
+              <span class="info-value">T.K.M. College of Engineering, Kollam</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">DEGREE</span>
+              <span class="info-value">B.Tech in Computer Science &amp; AI (CS-AI)</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">HOMETOWN</span>
+              <span class="info-value">Kozhikode, Kerala, India</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">CORE FOCUS</span>
+              <span class="info-value">C++, Algorithms, Web Tools, AI/ML</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">DIRECT CONTACT</span>
+              <a href="mailto:anfaalmm992@gmail.com" class="info-value info-link">anfaalmm992@gmail.com ↗</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ── Toolkit ────────────────────────────────── -->
     <section class="section toolkit" id="toolkit" aria-label="Technical Skills">
       <div class="section-bar" data-reveal>
-        <span class="section-index">02 / TOOLKIT</span>
-        <span class="section-aside">Core Technologies</span>
+        <span class="section-index">03 / TOOLKIT</span>
+        <span class="section-aside">Current &amp; Emerging Stack</span>
       </div>
       <ul class="skills-list" id="skills" data-reveal></ul>
+      
+      <div class="toolkit-next" data-reveal>
+        <span class="toolkit-next-label">CURRENTLY EXPLORING &amp; NEXT UP:</span>
+        <div class="toolkit-next-tags">
+          <span class="next-tag">Python</span>
+          <span class="next-tag">Machine Learning</span>
+          <span class="next-tag">Data Structures</span>
+          <span class="next-tag">Open Source Collaboration</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Contact / Let's Connect ────────────────── -->
+    <section class="section contact" id="contact" aria-label="Contact Section">
+      <div class="section-bar" data-reveal>
+        <span class="section-index">04 / LET'S CONNECT</span>
+        <span class="section-aside">Get in touch</span>
+      </div>
+      <div class="contact-card" data-reveal>
+        <div class="contact-header">
+          <h2 class="contact-title">Interested in collaborating or building together?</h2>
+          <p class="contact-desc">
+            Whether you want to discuss open-source projects, beginner hackathons, or opportunities in AI and software engineering, feel free to reach out!
+          </p>
+        </div>
+        <div class="contact-buttons">
+          <a href="https://www.linkedin.com/in/anfaaltech/" target="_blank" rel="noopener noreferrer" class="btn btn--solid">
+            <span>LinkedIn: anfaaltech</span> ↗
+          </a>
+          <a href="https://github.com/anfaalresearch" target="_blank" rel="noopener noreferrer" class="btn btn--outline">
+            <span>GitHub: anfaalresearch</span> ↗
+          </a>
+          <a href="mailto:anfaalmm992@gmail.com" class="btn btn--outline">
+            <span>Email Me</span> ↗
+          </a>
+        </div>
+      </div>
     </section>
   </main>
 
@@ -141,7 +238,7 @@
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
 
-      /* ── Custom cursor with event delegation (zero lag, handles dynamic elements) ── */
+      /* ── Custom cursor with event delegation ── */
       const cur = document.getElementById('cursor');
       if (cur && hasFinePointer) {
         document.addEventListener('mousemove', function (e) {
@@ -150,7 +247,7 @@
         });
 
         document.addEventListener('mouseover', function (e) {
-          if (e.target.closest('a, button, .card, [role="button"]')) {
+          if (e.target.closest('a, button, .card, .journey-card, .contact-card, [role="button"]')) {
             cur.classList.add('is-hover');
           } else {
             cur.classList.remove('is-hover');
@@ -180,7 +277,6 @@
         window.__ro = ro;
         document.querySelectorAll('[data-reveal]').forEach(function (el) { ro.observe(el); });
       } else {
-        // Fallback for older browsers
         document.querySelectorAll('[data-reveal]').forEach(function (el) { el.classList.add('is-visible'); });
       }
 
@@ -202,6 +298,115 @@
           frame.style.transform = 'perspective(900px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg) scale(' + scale + ')';
           requestAnimationFrame(tickTilt);
         })();
+      }
+
+      /* ══════════════════════════════════════════════════════
+         INTERACTIVE MOVING PARTICLE CONSTELLATION (CANVAS)
+         Silky smooth, battery friendly, zero mobile lag
+         ══════════════════════════════════════════════════════ */
+      const canvas = document.getElementById('bg-canvas');
+      if (canvas && !prefersReducedMotion) {
+        const ctx = canvas.getContext('2d');
+        let width = 0;
+        let height = 0;
+        let particles = [];
+        let mouseX = -1000;
+        let mouseY = -1000;
+
+        function resize() {
+          width = canvas.width = window.innerWidth;
+          height = canvas.height = window.innerHeight;
+          initParticles();
+        }
+
+        const isMobile = window.innerWidth < 820;
+        const count = isMobile ? 24 : 50;
+        const maxDist = isMobile ? 85 : 125;
+
+        function initParticles() {
+          particles = [];
+          for (let i = 0; i < count; i++) {
+            particles.push({
+              x: Math.random() * width,
+              y: Math.random() * height,
+              vx: (Math.random() - 0.5) * 0.45,
+              vy: (Math.random() - 0.5) * 0.45,
+              radius: Math.random() * 1.5 + 0.8,
+              color: Math.random() > 0.35 ? 'rgba(200, 245, 66, ' : 'rgba(56, 189, 248, '
+            });
+          }
+        }
+
+        if (hasFinePointer) {
+          window.addEventListener('mousemove', function (e) {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+          });
+          window.addEventListener('mouseleave', function () {
+            mouseX = -1000;
+            mouseY = -1000;
+          });
+        }
+
+        function draw() {
+          ctx.clearRect(0, 0, width, height);
+
+          // Update & draw particles
+          for (let i = 0; i < particles.length; i++) {
+            const p = particles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+
+            // Bounce off edges smoothly
+            if (p.x < 0 || p.x > width) p.vx *= -1;
+            if (p.y < 0 || p.y > height) p.vy *= -1;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = p.color + '0.55)';
+            ctx.fill();
+
+            // Inter-particle connecting lines
+            for (let j = i + 1; j < particles.length; j++) {
+              const p2 = particles[j];
+              const dx = p.x - p2.x;
+              const dy = p.y - p2.y;
+              const dist = Math.sqrt(dx * dx + dy * dy);
+
+              if (dist < maxDist) {
+                const alpha = (1 - dist / maxDist) * 0.15;
+                ctx.beginPath();
+                ctx.moveTo(p.x, p.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.strokeStyle = 'rgba(200, 245, 66, ' + alpha + ')';
+                ctx.lineWidth = 0.8;
+                ctx.stroke();
+              }
+            }
+
+            // Subtle interaction with mouse
+            if (hasFinePointer && mouseX > 0) {
+              const mdx = p.x - mouseX;
+              const mdy = p.y - mouseY;
+              const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
+              if (mdist < 140) {
+                const mAlpha = (1 - mdist / 140) * 0.22;
+                ctx.beginPath();
+                ctx.moveTo(p.x, p.y);
+                ctx.lineTo(mouseX, mouseY);
+                ctx.strokeStyle = 'rgba(56, 189, 248, ' + mAlpha + ')';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+              }
+            }
+          }
+
+          requestAnimationFrame(draw);
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+        draw();
       }
     })();
   </script>

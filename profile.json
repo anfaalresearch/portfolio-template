@@ -1,12 +1,17 @@
 {
     "name": "MUHAMMED ANFAAL M M",
-    "tagline": "First-year B.Tech student exploring computer science and AI",
-    "bio": "I am a first-year B.Tech student studying Computer Science and Artificial Intelligence at T.K.M. College of Engineering, Kollam. I am building my foundations in coding, Git, and open-source collaboration while learning through small projects and practical contributions.",
+    "tagline": "CS & AI Student at TKM College of Engineering · Tech Enthusiast · Aspiring AI Specialist",
+    "bio": "I am a first-year B.Tech student studying Computer Science and Artificial Intelligence at T.K.M. College of Engineering, Kollam, originally from Kozhikode. I am passionate about core programming logic, building privacy-first web tools, and exploring the future of AI & Machine Learning. Every expert was once a beginner — learning by building, breaking, and contributing.",
+    "location": "Kozhikode & Kollam, Kerala",
+    "college": "T.K.M. College of Engineering, Kollam",
+    "branch": "Computer Science & Artificial Intelligence (CS-AI)",
     "skills": [
         "C++",
+        "C",
         "HTML",
         "CSS",
-        "Git"
+        "Git",
+        "Algorithms"
     ],
     "projects": [
         {
@@ -27,6 +32,7 @@
     ],
     "links": {
         "github": "https://github.com/anfaalresearch",
-        "linkedin": "https://www.linkedin.com/in/anfaaltech"
+        "linkedin": "https://www.linkedin.com/in/anfaaltech/",
+        "email": "mailto:anfaalmm992@gmail.com"
     }
 }
