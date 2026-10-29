@@ -7,9 +7,16 @@
   <meta name="author" content="Muhammed Anfaal M M">
   <meta name="theme-color" content="#07080a">
   <title>Muhammed Anfaal M M — TKM College of Engineering</title>
+
+  <!-- Preconnect & optimized font loading -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=DM+Serif+Display:ital@1&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=DM+Serif+Display:ital@1&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=DM+Serif+Display:ital@1&display=swap" rel="stylesheet">
+  </noscript>
+
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -74,7 +81,7 @@
             how they work<span class="accent-dot" aria-hidden="true">.</span>
           </h1>
           <p class="hero-sub" id="tagline">
-            Muhammed Anfaal M M — First-year B.Tech student in Computer Science &amp; Artificial Intelligence at TKM College of Engineering. Learning through practical engineering, Git, and open-source contributions.
+            <strong style="color:var(--fg);">MUHAMMED ANFAAL M M</strong> — First-year B.Tech student in Computer Science &amp; Artificial Intelligence at <strong style="color:var(--green);">T.K.M. College of Engineering, Kollam</strong>. Learning through practical engineering, Git, and open-source contributions.
           </p>
           <div class="hero-actions">
             <a href="#work" class="btn btn--solid">Explore My Work ↓</a>
@@ -90,18 +97,22 @@
           </div>
         </div>
 
-        <!-- Right: 3D interactive photo frame -->
+        <!-- Right: 3D interactive photo frame with high-performance picture tag -->
         <div class="hero-visual" id="heroVisual" data-reveal>
           <div class="hero-frame" id="heroFrame">
-            <img
-              src="avatar.jpg"
-              alt="Muhammed Anfaal M M, First-year CS-AI student at TKM College of Engineering, Kollam"
-              class="hero-photo"
-              loading="eager"
-              decoding="async"
-              width="600"
-              height="600"
-            >
+            <picture>
+              <source srcset="avatar.webp" type="image/webp">
+              <img
+                src="avatar.jpg"
+                alt="Muhammed Anfaal M M, First-year CS-AI student at TKM College of Engineering, Kollam"
+                class="hero-photo"
+                fetchpriority="high"
+                loading="eager"
+                decoding="async"
+                width="600"
+                height="600"
+              >
+            </picture>
             <span class="frame-tag frame-tag--tl" aria-hidden="true">M. ANFAAL</span>
             <span class="frame-tag frame-tag--tr" aria-hidden="true">TKMCE · CS-AI</span>
             <span class="frame-tag frame-tag--br" aria-hidden="true">MOVE TO EXPLORE</span>
@@ -112,13 +123,116 @@
       </div>
     </header>
 
-    <!-- ── Selected Work ──────────────────────────── -->
+    <!-- ── Selected Work (Pre-rendered for zero layout shift) ── -->
     <section class="section work" id="work" aria-label="Selected Projects">
       <div class="section-bar" data-reveal>
         <span class="section-index">01 / SELECTED WORK</span>
         <span class="section-aside">A few things I've built ↗</span>
       </div>
-      <div class="projects-grid" id="projects"></div>
+      <div class="projects-grid" id="projects">
+        <!-- 01: FileForge -->
+        <article class="card card--featured" data-reveal>
+          <div class="card-preview">
+            <div class="prev prev-fileforge" aria-hidden="true">
+              <div class="ff-header">
+                <span class="ff-logo">FileForge</span>
+                <span class="ff-sub">Privacy-first file toolkit for the web.</span>
+              </div>
+              <div class="ff-dropzone">
+                <div class="ff-icon">&#9707;</div>
+                <span>Drop files here</span>
+                <span class="ff-or">or click to select</span>
+              </div>
+              <div class="ff-actions">
+                <div class="ff-action"><span class="ff-dot"></span>Merge PDF</div>
+                <div class="ff-action ff-action--active"><span class="ff-dot"></span>Compress Image</div>
+                <div class="ff-action"><span class="ff-dot"></span>Convert Format</div>
+              </div>
+              <div class="ff-progress" role="presentation">
+                <div class="ff-progress-fill"></div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="card-num">01</span>
+              <span class="card-cat">WEB APP</span>
+            </div>
+            <h3 class="card-title">FileForge</h3>
+            <p class="card-desc">A privacy-first browser toolkit for converting, resizing, compressing, cropping, and inspecting files without uploading them.</p>
+            <a class="card-link" href="https://anfaalresearch.github.io/FileForge/" target="_blank" rel="noopener noreferrer" aria-label="Open FileForge in a new tab">
+              <span>View Project</span>
+              <span class="card-link-arrow" aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- 02: Lofi-Timer -->
+        <article class="card card--small" data-reveal>
+          <div class="card-preview">
+            <div class="prev prev-timer" aria-hidden="true">
+              <div class="tmr-label">Deep Work</div>
+              <div class="tmr-ring">
+                <svg viewBox="0 0 100 100" class="tmr-svg" aria-hidden="true">
+                  <circle cx="50" cy="50" r="42" class="tmr-track"/>
+                  <circle cx="50" cy="50" r="42" class="tmr-fill"/>
+                </svg>
+                <div class="tmr-time">25:00</div>
+              </div>
+              <div class="tmr-tags">
+                <span>&#9654;</span>
+                <span class="tmr-tag">Focus</span>
+                <span class="tmr-tag">Sounds</span>
+                <span class="tmr-tag">Stats</span>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="card-num">02</span>
+              <span class="card-cat">PRODUCTIVITY</span>
+            </div>
+            <h3 class="card-title">Lofi-Timer</h3>
+            <p class="card-desc">A privacy-first study timer with subjects, tasks, goals, streaks, statistics, session history, and local data storage.</p>
+            <a class="card-link" href="https://github.com/anfaalresearch/Lofi-Timer" target="_blank" rel="noopener noreferrer" aria-label="Open Lofi-Timer in a new tab">
+              <span>View Project</span>
+              <span class="card-link-arrow" aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- 03: DevStarter -->
+        <article class="card card--small" data-reveal>
+          <div class="card-preview">
+            <div class="prev prev-devstarter" aria-hidden="true">
+              <div class="ds-search">&#9906; Search resources…</div>
+              <div class="ds-tabs">
+                <span class="ds-tab ds-tab--on">All</span>
+                <span class="ds-tab">Web Dev</span>
+                <span class="ds-tab">CS</span>
+                <span class="ds-tab">Tools</span>
+              </div>
+              <div class="ds-grid">
+                <div class="ds-card"><span class="ds-icon">&#128187;</span>Web Development<span class="ds-hint">Start here</span></div>
+                <div class="ds-card"><span class="ds-icon">&#129504;</span>CS Fundamentals<span class="ds-hint">Core concepts</span></div>
+                <div class="ds-card"><span class="ds-icon">&#9881;</span>Tools &amp; Workflow<span class="ds-hint">Build faster</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="card-num">03</span>
+              <span class="card-cat">RESOURCES</span>
+            </div>
+            <h3 class="card-title">DevStarter</h3>
+            <p class="card-desc">A beginner-friendly directory of free resources for people learning to code. I contributed a reusable external-link helper to improve the project structure.</p>
+            <a class="card-link" href="https://github.com/anfaalresearch/devstarter" target="_blank" rel="noopener noreferrer" aria-label="Open DevStarter in a new tab">
+              <span>View Project</span>
+              <span class="card-link-arrow" aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </article>
+      </div>
     </section>
 
     <!-- ── Journey & Background ───────────────────── -->
@@ -170,7 +284,7 @@
             </div>
             <div class="info-item">
               <span class="info-label">DIRECT CONTACT</span>
-              <a href="mailto:anfaalmm992@gmail.com" class="info-value info-link">anfaalmm992@gmail.com ↗</a>
+              <a href="mailto:anfaalresearch@gmail.com" class="info-value info-link">anfaalresearch@gmail.com ↗</a>
             </div>
           </div>
         </div>
@@ -183,7 +297,14 @@
         <span class="section-index">03 / TOOLKIT</span>
         <span class="section-aside">Current &amp; Emerging Stack</span>
       </div>
-      <ul class="skills-list" id="skills" data-reveal></ul>
+      <ul class="skills-list" id="skills" data-reveal>
+        <li>C++</li>
+        <li>C</li>
+        <li>HTML</li>
+        <li>CSS</li>
+        <li>Git</li>
+        <li>Algorithms</li>
+      </ul>
       
       <div class="toolkit-next" data-reveal>
         <span class="toolkit-next-label">CURRENTLY EXPLORING &amp; NEXT UP:</span>
@@ -216,8 +337,8 @@
           <a href="https://github.com/anfaalresearch" target="_blank" rel="noopener noreferrer" class="btn btn--outline">
             <span>GitHub: anfaalresearch</span> ↗
           </a>
-          <a href="mailto:anfaalmm992@gmail.com" class="btn btn--outline">
-            <span>Email Me</span> ↗
+          <a href="mailto:anfaalresearch@gmail.com" class="btn btn--outline">
+            <span>Email Me (anfaalresearch@gmail.com)</span> ↗
           </a>
         </div>
       </div>
@@ -227,12 +348,12 @@
   <!-- ── Footer ─────────────────────────────────── -->
   <footer class="footer" role="contentinfo">
     <div class="footer-copy">
-      <span id="footer"></span> · <span class="footer-author">Muhammed Anfaal M M</span>
+      <span id="footer">&copy; 2026 MUHAMMED ANFAAL M M</span> · <span class="footer-author">Muhammed Anfaal M M</span>
     </div>
     <div class="footer-right">TKM College of Engineering · FOSSSoC Season 1</div>
   </footer>
 
-  <script src="script.js"></script>
+  <script src="script.js" defer></script>
   <script>
     (function () {
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -244,7 +365,7 @@
         document.addEventListener('mousemove', function (e) {
           cur.style.left = e.clientX + 'px';
           cur.style.top  = e.clientY + 'px';
-        });
+        }, { passive: true });
 
         document.addEventListener('mouseover', function (e) {
           if (e.target.closest('a, button, .card, .journey-card, .contact-card, [role="button"]')) {
@@ -252,7 +373,7 @@
           } else {
             cur.classList.remove('is-hover');
           }
-        });
+        }, { passive: true });
 
         document.addEventListener('mouseleave', function () {
           cur.style.opacity = '0';
@@ -273,7 +394,7 @@
               ro.unobserve(e.target);
             }
           });
-        }, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' });
+        }, { threshold: 0.06, rootMargin: '0px 0px -20px 0px' });
         window.__ro = ro;
         document.querySelectorAll('[data-reveal]').forEach(function (el) { ro.observe(el); });
       } else {
@@ -289,7 +410,7 @@
           const r = visual.getBoundingClientRect();
           tx = ((e.clientX - r.left)  / r.width  - 0.5) * 2;
           ty = ((e.clientY - r.top)   / r.height - 0.5) * 2;
-        });
+        }, { passive: true });
         visual.addEventListener('mouseleave', function () { tx = 0; ty = 0; });
         (function tickTilt() {
           rx += (ty * -7 - rx) * 0.09;
@@ -301,8 +422,8 @@
       }
 
       /* ══════════════════════════════════════════════════════
-         INTERACTIVE MOVING PARTICLE CONSTELLATION (CANVAS)
-         Silky smooth, battery friendly, zero mobile lag
+         HIGH-EFFICIENCY MOVING PARTICLE CONSTELLATION
+         Pauses when tab hidden  ·  Zero battery waste
          ══════════════════════════════════════════════════════ */
       const canvas = document.getElementById('bg-canvas');
       if (canvas && !prefersReducedMotion) {
@@ -312,6 +433,7 @@
         let particles = [];
         let mouseX = -1000;
         let mouseY = -1000;
+        let isTabActive = !document.hidden;
 
         function resize() {
           width = canvas.width = window.innerWidth;
@@ -320,8 +442,8 @@
         }
 
         const isMobile = window.innerWidth < 820;
-        const count = isMobile ? 24 : 50;
-        const maxDist = isMobile ? 85 : 125;
+        const count = isMobile ? 22 : 44;
+        const maxDist = isMobile ? 80 : 120;
 
         function initParticles() {
           particles = [];
@@ -329,8 +451,8 @@
             particles.push({
               x: Math.random() * width,
               y: Math.random() * height,
-              vx: (Math.random() - 0.5) * 0.45,
-              vy: (Math.random() - 0.5) * 0.45,
+              vx: (Math.random() - 0.5) * 0.4,
+              vy: (Math.random() - 0.5) * 0.4,
               radius: Math.random() * 1.5 + 0.8,
               color: Math.random() > 0.35 ? 'rgba(200, 245, 66, ' : 'rgba(56, 189, 248, '
             });
@@ -341,14 +463,23 @@
           window.addEventListener('mousemove', function (e) {
             mouseX = e.clientX;
             mouseY = e.clientY;
-          });
+          }, { passive: true });
           window.addEventListener('mouseleave', function () {
             mouseX = -1000;
             mouseY = -1000;
           });
         }
 
+        document.addEventListener('visibilitychange', function () {
+          isTabActive = !document.hidden;
+          if (isTabActive) {
+            requestAnimationFrame(draw);
+          }
+        });
+
         function draw() {
+          if (!isTabActive) return;
+
           ctx.clearRect(0, 0, width, height);
 
           // Update & draw particles
@@ -384,13 +515,13 @@
               }
             }
 
-            // Subtle interaction with mouse
+            // Interactive mouse connection
             if (hasFinePointer && mouseX > 0) {
               const mdx = p.x - mouseX;
               const mdy = p.y - mouseY;
               const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
-              if (mdist < 140) {
-                const mAlpha = (1 - mdist / 140) * 0.22;
+              if (mdist < 130) {
+                const mAlpha = (1 - mdist / 130) * 0.22;
                 ctx.beginPath();
                 ctx.moveTo(p.x, p.y);
                 ctx.lineTo(mouseX, mouseY);
@@ -404,7 +535,7 @@
           requestAnimationFrame(draw);
         }
 
-        window.addEventListener('resize', resize);
+        window.addEventListener('resize', resize, { passive: true });
         resize();
         draw();
       }
