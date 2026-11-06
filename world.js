@@ -1,5 +1,3 @@
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js';
-
 (() => {
   'use strict';
 
@@ -11,10 +9,15 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
   const hudPhase = document.getElementById('hud-phase');
   const hudCoords = document.getElementById('hud-coords');
 
+  const THREE = window.THREE;
+  if (!THREE) {
+    init2DFallback();
+    return;
+  }
+
   /* ── Renderer & Scene Setup ── */
   let renderer, scene, camera;
-  let particles, starField;
-  let centralCore, innerCore, ringA, ringB, cyberGrid;
+  let starField, centralCore, innerCore, ringA, ringB, cyberGrid;
   const floatingNodes = [];
   let animId = null;
   let isTabActive = !document.hidden;
@@ -32,7 +35,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     { threshold: 1.00, name: '05 / COLLABORATE' }
   ];
 
-  function initWebGL2() {
+  function initWebGL() {
     try {
       renderer = new THREE.WebGLRenderer({
         canvas,
@@ -42,14 +45,16 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
         stencil: false
       });
     } catch (e) {
-      console.warn('WebGL2 not available, falling back', e);
+      init2DFallback();
       return false;
     }
 
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
     renderer.setSize(window.innerWidth, window.innerHeight, false);
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.15;
+    if (THREE.ACESFilmicToneMapping) {
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.15;
+    }
 
     scene = new THREE.Scene();
     scene.fog = new THREE.FogExp2(0x07080a, 0.015);
@@ -79,7 +84,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
 
   /* ── 3D Starfield & Space Dust ── */
   function buildStarfield() {
-    const count = window.innerWidth < 768 ? 750 : 1500;
+    const count = window.innerWidth < 768 ? 700 : 1400;
     const geometry = new THREE.BufferGeometry();
     const positions = new Float32Array(count * 3);
     const colors = new Float32Array(count * 3);
@@ -93,7 +98,6 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
 
     for (let i = 0; i < count; i++) {
       const i3 = i * 3;
-      // Cylindrical spread along the scroll tunnel
       const radius = 12 + Math.random() * 55;
       const theta = Math.random() * Math.PI * 2;
       positions[i3]     = Math.cos(theta) * radius;
@@ -228,12 +232,10 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
     scrollProgress = Math.min(1, Math.max(0, window.scrollY / maxScroll));
 
-    // Dynamic 3D Camera path
     targetCam.z = 22 - scrollProgress * 78;
     targetCam.y = -scrollProgress * 22;
     targetCam.x = Math.sin(scrollProgress * Math.PI * 1.6) * 7.5;
 
-    // Update HUD phase indicator
     for (let i = 0; i < PHASES.length; i++) {
       if (scrollProgress <= PHASES[i].threshold || i === PHASES.length - 1) {
         if (hudPhase && hudPhase.textContent !== PHASES[i].name) {
@@ -280,7 +282,6 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
 
     const elapsedTime = clock.getElapsedTime();
 
-    // Smooth camera interpolation
     camPos.x += (targetCam.x + pointer.x * 2.2 - camPos.x) * 0.06;
     camPos.y += (targetCam.y - pointer.y * 1.8 - camPos.y) * 0.06;
     camPos.z += (targetCam.z - camPos.z) * 0.06;
@@ -295,7 +296,6 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
       camPos.z - 18
     );
 
-    // Rotate central cyber core
     if (centralCore) {
       centralCore.rotation.y = elapsedTime * 0.18;
       centralCore.rotation.x = Math.sin(elapsedTime * 0.12) * 0.2;
@@ -307,19 +307,16 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
       if (ringB) ringB.rotation.x = -elapsedTime * 0.22;
     }
 
-    // Animate starfield drift
     if (starField) {
       starField.rotation.y = elapsedTime * 0.015;
     }
 
-    // Animate floating polyhedra
     floatingNodes.forEach((node) => {
       node.rotation.x += node.userData.rotSpeedX;
       node.rotation.y += node.userData.rotSpeedY;
       node.position.y = node.userData.baseY + Math.sin(elapsedTime * node.userData.floatFreq) * 0.6;
     });
 
-    // Update HUD Coordinates telemetry
     if (hudCoords && Math.floor(elapsedTime * 10) % 6 === 0) {
       hudCoords.textContent = `Z: ${camPos.z.toFixed(1)} · POS [${camPos.x.toFixed(1)}, ${camPos.y.toFixed(1)}]`;
     }
@@ -338,7 +335,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     }
   });
 
-  if (initWebGL2()) {
+  if (initWebGL()) {
     updateScrollMetrics();
     onResize();
     if (!prefersReducedMotion) {
@@ -347,5 +344,70 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
       camera.position.set(0, 0, 22);
       renderer.render(scene, camera);
     }
+  }
+
+  /* ── Smooth 2D Constellation Fallback (Zero-Error Guarantee) ── */
+  function init2DFallback() {
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+    const count = window.innerWidth < 820 ? 25 : 45;
+    const maxDist = 110;
+    const particles = [];
+
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        radius: Math.random() * 1.5 + 0.8,
+        color: Math.random() > 0.35 ? 'rgba(200, 245, 66,' : 'rgba(56, 189, 248,'
+      });
+    }
+
+    function draw() {
+      if (document.hidden) return;
+      ctx.clearRect(0, 0, width, height);
+
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0 || p.x > width) p.vx *= -1;
+        if (p.y < 0 || p.y > height) p.vy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.color + ' 0.55)';
+        ctx.fill();
+
+        for (let j = i + 1; j < particles.length; j++) {
+          const p2 = particles[j];
+          const dx = p.x - p2.x;
+          const dy = p.y - p2.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < maxDist) {
+            const alpha = (1 - dist / maxDist) * 0.15;
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = 'rgba(200, 245, 66, ' + alpha + ')';
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }, { passive: true });
+
+    draw();
   }
 })();

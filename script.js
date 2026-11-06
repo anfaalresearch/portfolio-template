@@ -91,37 +91,45 @@ const PREVIEWS = [
   </div>`
 ];
 
-fetch('profile.json')
-  .then(r => r.json())
-  .then(p => {
-    document.title = `${p.name} — TKM College of Engineering`;
+if (window.location.protocol === 'file:') {
+  // Running from local filesystem: use pre-rendered DOM without failing fetch
+  const skEl = $('skills');
+  const prEl = $('projects');
+  if (window.__ro && prEl) {
+    prEl.querySelectorAll('[data-reveal]').forEach(el => window.__ro.observe(el));
+  }
+} else {
+  fetch('profile.json')
+    .then(r => r.json())
+    .then(p => {
+      document.title = `${p.name} — TKM College of Engineering`;
 
-    const tEl = $('tagline');
-    if (tEl) {
-      tEl.innerHTML = `<strong style="color:var(--fg);">${esc(p.name)}</strong> — First-year B.Tech student in Computer Science &amp; Artificial Intelligence at <strong style="color:var(--green);">T.K.M. College of Engineering, Kollam</strong>. Learning through practical engineering, Git, and open-source contributions.`;
-    }
+      const tEl = $('tagline');
+      if (tEl) {
+        tEl.innerHTML = `<strong style="color:var(--fg);">${esc(p.name)}</strong> — First-year B.Tech student in Computer Science &amp; Artificial Intelligence at <strong style="color:var(--green);">T.K.M. College of Engineering, Kollam</strong>. Learning through practical engineering, Git, and open-source contributions.`;
+      }
 
-    const gh = p.links?.github || 'https://github.com/anfaalresearch';
-    const li = p.links?.linkedin || 'https://www.linkedin.com/in/anfaaltech/';
-    
-    const ghLink = $('github-link');
-    if (ghLink) ghLink.href = gh;
+      const gh = p.links?.github || 'https://github.com/anfaalresearch';
+      const li = p.links?.linkedin || 'https://www.linkedin.com/in/anfaaltech/';
+      
+      const ghLink = $('github-link');
+      if (ghLink) ghLink.href = gh;
 
-    const liLink = $('linkedin-link');
-    if (liLink) liLink.href = li;
+      const liLink = $('linkedin-link');
+      if (liLink) liLink.href = li;
 
-    const navCta = $('nav-cta');
-    if (navCta) navCta.href = li;
+      const navCta = $('nav-cta');
+      if (navCta) navCta.href = li;
 
-    const fEl = $('footer');
-    if (fEl) fEl.textContent = `© ${new Date().getFullYear()} ${p.name}`;
+      const fEl = $('footer');
+      if (fEl) fEl.textContent = `© ${new Date().getFullYear()} ${p.name}`;
 
-    const skEl = $('skills');
-    if (skEl) skEl.innerHTML = (p.skills || []).map(s => `<li>${esc(s)}</li>`).join('');
+      const skEl = $('skills');
+      if (skEl) skEl.innerHTML = (p.skills || []).map(s => `<li>${esc(s)}</li>`).join('');
 
-    const prEl = $('projects');
-    if (prEl) {
-      prEl.innerHTML = (p.projects || []).map((x, i) => `
+      const prEl = $('projects');
+      if (prEl) {
+        prEl.innerHTML = (p.projects || []).map((x, i) => `
 <article class="card ${i === 0 ? 'card--featured' : 'card--small'}" data-reveal>
   <div class="card-preview">${PREVIEWS[i] || `<span class="card-ghost">${esc(x.title)}</span>`}</div>
   <div class="card-body">
@@ -142,7 +150,8 @@ fetch('profile.json')
   </div>
 </article>`).join('');
 
-      if (window.__ro) prEl.querySelectorAll('[data-reveal]').forEach(el => window.__ro.observe(el));
-    }
-  })
-  .catch(() => console.warn('portfolio: could not load profile.json'));
+        if (window.__ro) prEl.querySelectorAll('[data-reveal]').forEach(el => window.__ro.observe(el));
+      }
+    })
+    .catch(() => {});
+}
