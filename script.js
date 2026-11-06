@@ -3,7 +3,7 @@ const esc = s  => String(s ?? '').replace(/[&<>"']/g,
   c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const safe = u => /^https?:\/\//i.test(u) ? u : '#';
 
-const CATS = ['WEB APP', 'PRODUCTIVITY', 'RESOURCES'];
+const CATS = ['WEB APP', 'PRODUCTIVITY', 'RESOURCES', 'OPEN SOURCE · FOSS', 'OPEN SOURCE · ANALYTICS'];
 
 /* CSS-art previews — one per project, ordered to match profile.json */
 const PREVIEWS = [
@@ -60,6 +60,34 @@ const PREVIEWS = [
       <div class="ds-card"><span class="ds-icon">&#129504;</span>CS Fundamentals<span class="ds-hint">Core concepts</span></div>
       <div class="ds-card"><span class="ds-icon">&#9881;</span>Tools &amp; Workflow<span class="ds-hint">Build faster</span></div>
     </div>
+  </div>`,
+
+  /* 3 — Cyber-Security-Simulator */
+  `<div class="prev prev-css-sim" aria-hidden="true">
+    <div class="css-header">
+      <span class="css-icon">&#9876;</span>
+      <span class="css-title">Cyber Defense</span>
+    </div>
+    <div class="css-stats">
+      <div class="css-stat"><span class="css-val">XP</span><span class="css-label">Rank Engine</span></div>
+      <div class="css-stat"><span class="css-val css-val--green">&#9650;</span><span class="css-label">Level Up</span></div>
+      <div class="css-stat"><span class="css-val">ACL</span><span class="css-label">Firewall Sim</span></div>
+    </div>
+    <div class="css-bar" role="presentation"><div class="css-bar-fill"></div></div>
+  </div>`,
+
+  /* 4 — BrokenKey: per-key heatmap */
+  `<div class="prev prev-bkey" aria-hidden="true">
+    <div class="bk-label">Per-Key Error Heatmap</div>
+    <div class="bk-keys">
+      <span class="bk-key bk-key--hot">E</span>
+      <span class="bk-key bk-key--warm">T</span>
+      <span class="bk-key">A</span>
+      <span class="bk-key bk-key--hot">R</span>
+      <span class="bk-key bk-key--warm">S</span>
+      <span class="bk-key">N</span>
+    </div>
+    <div class="bk-stat">WPM: <span class="bk-val">62</span> · Accuracy: <span class="bk-val bk-val--green">94%</span></div>
   </div>`
 ];
 

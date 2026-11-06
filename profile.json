@@ -28,6 +28,16 @@
             "title": "DevStarter",
             "desc": "A beginner-friendly directory of free resources for people learning to code. I contributed a reusable external-link helper to improve the project structure.",
             "link": "https://github.com/anfaalresearch/devstarter"
+        },
+        {
+            "title": "Cyber-Security-Simulator",
+            "desc": "Contributed XP & rank progression engine, interactive firewall/ACL packet inspection simulator, and real quiz performance dashboard to this cybersecurity platform.",
+            "link": "https://github.com/tkmfoss/Cyber-Security-Simulator"
+        },
+        {
+            "title": "BrokenKey — Analytics",
+            "desc": "Built real-time per-key error heatmap, mistake telemetry, and accurate WPM calculation engine for a typing practice app.",
+            "link": "https://github.com/tkmfoss/BrokenKey/pull/33"
         }
     ],
     "links": {
