@@ -1,112 +1,329 @@
+/**
+ * world.js — Spatial WebGL Journey Engine
+ * Fully synchronized with scroll progression across page chapters.
+ * Powered by Three.js with strict color harmony:
+ *   - Obsidian Deep Space: #07080a
+ *   - Cyber Lime:          #c8f542
+ *   - Electric Cyan:       #38bdf8
+ *   - Silver Starlight:    #f3f4f6
+ */
 (() => {
   'use strict';
 
   const canvas = document.getElementById('world-canvas');
   if (!canvas) return;
 
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const ctx = canvas.getContext('2d', { alpha: true });
-  if (!ctx) return;
-
   const hudPhase = document.getElementById('hud-phase');
   const hudCoords = document.getElementById('hud-coords');
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  let width = 0;
-  let height = 0;
+  const THREE = window.THREE;
+  if (!THREE) {
+    init2DFallback();
+    return;
+  }
+
+  /* ── 1. Color Palette Tokens ── */
+  const COLOR_HEX_BG    = 0x07080a;
+  const COLOR_HEX_LIME  = 0xc8f542;
+  const COLOR_HEX_CYAN  = 0x38bdf8;
+  const COLOR_HEX_WHITE = 0xf3f4f6;
+
+  /* ── 2. Chapter Waypoint Definitions ── */
+  const CHAPTERS = [
+    { threshold: 0.18, name: '01 / ORIGIN CORE' },
+    { threshold: 0.42, name: '02 / SELECTED WORK' },
+    { threshold: 0.68, name: '03 / JOURNEY STRAND' },
+    { threshold: 0.86, name: '04 / TOOLKIT MATRIX' },
+    { threshold: 1.00, name: '05 / COLLABORATION' }
+  ];
+
+  let renderer, scene, camera;
   let animId = null;
   let isTabActive = !document.hidden;
 
-  // Pointer state with smooth spring easing
+  let starPoints, starGeo;
+  let heroIcosahedron, heroInnerRing, heroOuterRing;
+  let workRingSystem, journeyHelix, stackMatrix, footerPortal;
+  const shockwaves = [];
+
   const pointer = {
-    x: -2000,
-    y: -2000,
-    targetX: -2000,
-    targetY: -2000,
-    active: false,
-    radius: 170
+    x: 0,
+    y: 0,
+    targetX: 0,
+    targetY: 0
   };
 
-  // Shockwave ripples on click / tap
-  const ripples = [];
-
-  let scrollY = window.scrollY || 0;
   let scrollProgress = 0;
+  let targetCamZ = 24;
+  let targetCamY = 0;
+  let targetCamX = 0;
+  let currentCamZ = 24;
+  let currentCamY = 0;
+  let currentCamX = 0;
+  let lastScrollY = window.scrollY || 0;
+  let scrollVelocity = 0;
 
-  const PHASES = [
-    { threshold: 0.20, name: '01 / ORIGIN' },
-    { threshold: 0.45, name: '02 / SELECTED WORK' },
-    { threshold: 0.70, name: '03 / STORY & JOURNEY' },
-    { threshold: 0.88, name: '04 / TOOLKIT & STACK' },
-    { threshold: 1.00, name: '05 / COLLABORATE' }
-  ];
+  /* ── 3. WebGL Scene & Camera Initialization ── */
+  function initWebGL() {
+    try {
+      renderer = new THREE.WebGLRenderer({
+        canvas,
+        antialias: true,
+        alpha: true,
+        powerPreference: 'high-performance'
+      });
+    } catch (e) {
+      console.warn('WebGL init failed, using fallback:', e);
+      init2DFallback();
+      return false;
+    }
 
-  /* ── Strict Harmonized Palette (Cyber-Steel & Lime) ── */
-  const COLOR_LIME = 'rgba(200, 245, 66, ';
-  const COLOR_CYAN = 'rgba(56, 189, 248, ';
-  const COLOR_WHITE = 'rgba(243, 244, 246, ';
-
-  let particles = [];
-  let stars = [];
-
-  function resize() {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    width = window.innerWidth;
-    height = window.innerHeight;
-    canvas.width = Math.floor(width * dpr);
-    canvas.height = Math.floor(height * dpr);
-    canvas.style.width = width + 'px';
-    canvas.style.height = height + 'px';
-    ctx.scale(dpr, dpr);
+    renderer.setPixelRatio(dpr);
+    renderer.setSize(window.innerWidth, window.innerHeight, false);
 
-    initParticles();
-    initStars();
+    scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(COLOR_HEX_BG, 0.015);
+
+    camera = new THREE.PerspectiveCamera(52, window.innerWidth / window.innerHeight, 0.1, 280);
+    camera.position.set(0, 0, 24);
+
+    buildStarfield();
+    buildChapterLandmarks();
+    return true;
   }
 
-  function initParticles() {
-    particles = [];
-    const isMobile = width < 820;
-    const count = isMobile ? 32 : 68;
+  /* ── 4. Deep Volumetric Starfield (1200 Starlight Nodes) ── */
+  function buildStarfield() {
+    const starCount = window.innerWidth < 820 ? 600 : 1200;
+    const coords = new Float32Array(starCount * 3);
+    const colors = new Float32Array(starCount * 3);
 
-    for (let i = 0; i < count; i++) {
-      const isLime = Math.random() > 0.32;
-      const depth = Math.random() * 0.9 + 0.5; // 3D depth layer 0.5 - 1.4
+    const cWhite = new THREE.Color(COLOR_HEX_WHITE);
+    const cCyan  = new THREE.Color(COLOR_HEX_CYAN);
+    const cLime  = new THREE.Color(COLOR_HEX_LIME);
 
-      particles.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.55 * depth,
-        vy: (Math.random() - 0.5) * 0.55 * depth,
-        ox: 0,
-        oy: 0,
-        radius: (Math.random() * 1.5 + 1.0) * depth,
-        depth,
-        isLime,
-        pulseOffset: Math.random() * Math.PI * 2,
-        flare: 0 // energy flare on shockwave
-      });
+    for (let i = 0; i < starCount; i++) {
+      const idx = i * 3;
+      coords[idx]     = (Math.random() - 0.5) * 85;
+      coords[idx + 1] = (Math.random() - 0.5) * 85;
+      coords[idx + 2] = 30 - Math.random() * 150; // spans Z from +30 to -120
+
+      // Color distribution: 75% subtle white, 15% cyan, 10% lime
+      const roll = Math.random();
+      const col = roll > 0.25 ? cWhite : (roll > 0.10 ? cCyan : cLime);
+      colors[idx]     = col.r;
+      colors[idx + 1] = col.g;
+      colors[idx + 2] = col.b;
     }
+
+    starGeo = new THREE.BufferGeometry();
+    starGeo.setAttribute('position', new THREE.BufferAttribute(coords, 3));
+    starGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+    const starMat = new THREE.PointsMaterial({
+      size: 1.4,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.75,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    });
+
+    starPoints = new THREE.Points(starGeo, starMat);
+    scene.add(starPoints);
   }
 
-  function initStars() {
-    stars = [];
-    const count = width < 820 ? 70 : 160;
-    for (let i = 0; i < count; i++) {
-      stars.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        radius: Math.random() * 0.8 + 0.3,
-        alpha: Math.random() * 0.35 + 0.08,
-        speed: Math.random() * 0.025 + 0.008,
-        phase: Math.random() * Math.PI * 2
-      });
+  /* ── 5. Spatial Wireframe Chapter Landmarks ── */
+  function buildChapterLandmarks() {
+    /* ── Chapter 01 (Hero / Origin): Geodesic Core ── */
+    const heroGroup = new THREE.Group();
+    heroGroup.position.set(window.innerWidth < 820 ? 0 : 8, 1, 0);
+
+    const icoGeo = new THREE.IcosahedronGeometry(4.2, 1);
+    const icoMat = new THREE.MeshBasicMaterial({
+      color: COLOR_HEX_LIME,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.38,
+      blending: THREE.AdditiveBlending
+    });
+    heroIcosahedron = new THREE.Mesh(icoGeo, icoMat);
+    heroGroup.add(heroIcosahedron);
+
+    // Inner orbiting cyan ring
+    const ringGeoA = new THREE.TorusGeometry(5.2, 0.05, 12, 64);
+    const ringMatA = new THREE.MeshBasicMaterial({
+      color: COLOR_HEX_CYAN,
+      transparent: true,
+      opacity: 0.55,
+      blending: THREE.AdditiveBlending
+    });
+    heroInnerRing = new THREE.Mesh(ringGeoA, ringMatA);
+    heroInnerRing.rotation.x = Math.PI / 3;
+    heroGroup.add(heroInnerRing);
+
+    // Outer subtle cyber-lime ring
+    const ringGeoB = new THREE.TorusGeometry(6.4, 0.04, 12, 64);
+    const ringMatB = new THREE.MeshBasicMaterial({
+      color: COLOR_HEX_LIME,
+      transparent: true,
+      opacity: 0.40,
+      blending: THREE.AdditiveBlending
+    });
+    heroOuterRing = new THREE.Mesh(ringGeoB, ringMatB);
+    heroOuterRing.rotation.y = Math.PI / 4;
+    heroGroup.add(heroOuterRing);
+
+    scene.add(heroGroup);
+
+    /* ── Chapter 02 (Selected Work): Floating Cyber Ring System ── */
+    workRingSystem = new THREE.Group();
+    workRingSystem.position.set(-6, -6, -26);
+
+    const ringCGeo = new THREE.TorusGeometry(5.8, 0.06, 16, 72);
+    const ringCMat = new THREE.MeshBasicMaterial({
+      color: COLOR_HEX_CYAN,
+      transparent: true,
+      opacity: 0.45,
+      blending: THREE.AdditiveBlending
+    });
+    const workRingMesh = new THREE.Mesh(ringCGeo, ringCMat);
+    workRingMesh.rotation.x = Math.PI / 2.5;
+    workRingSystem.add(workRingMesh);
+
+    // Internal geometric diamond
+    const octGeo = new THREE.OctahedronGeometry(2.4, 0);
+    const octMat = new THREE.MeshBasicMaterial({
+      color: COLOR_HEX_LIME,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.5,
+      blending: THREE.AdditiveBlending
+    });
+    const octMesh = new THREE.Mesh(octGeo, octMat);
+    workRingSystem.add(octMesh);
+
+    scene.add(workRingSystem);
+
+    /* ── Chapter 03 (Story & Journey): Spatial Double Helix ── */
+    journeyHelix = new THREE.Group();
+    journeyHelix.position.set(7, -12, -52);
+
+    const helixCurvePointsA = [];
+    const helixCurvePointsB = [];
+    for (let t = 0; t <= 24; t += 0.5) {
+      const angle = t * 0.45;
+      const radius = 2.8;
+      const y = (t - 12) * 0.9;
+      helixCurvePointsA.push(new THREE.Vector3(Math.cos(angle) * radius, y, Math.sin(angle) * radius));
+      helixCurvePointsB.push(new THREE.Vector3(Math.cos(angle + Math.PI) * radius, y, Math.sin(angle + Math.PI) * radius));
     }
+
+    const helixGeoA = new THREE.BufferGeometry().setFromPoints(helixCurvePointsA);
+    const helixMatA = new THREE.LineBasicMaterial({
+      color: COLOR_HEX_LIME,
+      transparent: true,
+      opacity: 0.45,
+      blending: THREE.AdditiveBlending
+    });
+    journeyHelix.add(new THREE.Line(helixGeoA, helixMatA));
+
+    const helixGeoB = new THREE.BufferGeometry().setFromPoints(helixCurvePointsB);
+    const helixMatB = new THREE.LineBasicMaterial({
+      color: COLOR_HEX_CYAN,
+      transparent: true,
+      opacity: 0.45,
+      blending: THREE.AdditiveBlending
+    });
+    journeyHelix.add(new THREE.Line(helixGeoB, helixMatB));
+
+    scene.add(journeyHelix);
+
+    /* ── Chapter 04 (Toolkit & Stack): High-Tech Tesseract Grid ── */
+    stackMatrix = new THREE.Group();
+    stackMatrix.position.set(-5, -18, -76);
+
+    const boxGeo = new THREE.BoxGeometry(4.5, 4.5, 4.5);
+    const boxMat = new THREE.MeshBasicMaterial({
+      color: COLOR_HEX_LIME,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.35,
+      blending: THREE.AdditiveBlending
+    });
+    const outerBox = new THREE.Mesh(boxGeo, boxMat);
+    stackMatrix.add(outerBox);
+
+    const innerBoxGeo = new THREE.BoxGeometry(2.5, 2.5, 2.5);
+    const innerBoxMat = new THREE.MeshBasicMaterial({
+      color: COLOR_HEX_CYAN,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.55,
+      blending: THREE.AdditiveBlending
+    });
+    const innerBox = new THREE.Mesh(innerBoxGeo, innerBoxMat);
+    stackMatrix.add(innerBox);
+
+    scene.add(stackMatrix);
+
+    /* ── Chapter 05 (Collaborate & Footer): Horizon Portal ── */
+    footerPortal = new THREE.Group();
+    footerPortal.position.set(0, -24, -98);
+
+    const portalGeo = new THREE.TorusGeometry(8.5, 0.08, 16, 80);
+    const portalMat = new THREE.MeshBasicMaterial({
+      color: COLOR_HEX_LIME,
+      transparent: true,
+      opacity: 0.48,
+      blending: THREE.AdditiveBlending
+    });
+    const portalMesh = new THREE.Mesh(portalGeo, portalMat);
+    footerPortal.add(portalMesh);
+
+    scene.add(footerPortal);
   }
 
-  /* ── Interactive Pointer & Touch Tracking ── */
+  /* ── 6. Interactive Shockwave Ripple in 3D ── */
+  function triggerShockwave() {
+    if (!scene || !camera) return;
+    if (shockwaves.length > 4) {
+      const old = shockwaves.shift();
+      scene.remove(old.mesh);
+      old.geo.dispose();
+      old.mat.dispose();
+    }
+
+    const geo = new THREE.RingGeometry(0.1, 0.4, 48);
+    const mat = new THREE.MeshBasicMaterial({
+      color: COLOR_HEX_LIME,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.85,
+      blending: THREE.AdditiveBlending
+    });
+    const mesh = new THREE.Mesh(geo, mat);
+
+    // Position shockwave in front of camera
+    mesh.position.copy(camera.position);
+    mesh.position.z -= 8;
+    mesh.position.x += pointer.x * 3.5;
+    mesh.position.y -= pointer.y * 2.5;
+    mesh.rotation.copy(camera.rotation);
+
+    scene.add(mesh);
+    shockwaves.push({ mesh, geo, mat, scale: 1, opacity: 0.85 });
+  }
+
+  window.addEventListener('click', triggerShockwave, { passive: true });
+  window.addEventListener('touchstart', triggerShockwave, { passive: true });
+
+  /* ── 7. Pointer Move Tracking ── */
   function onPointerMove(clientX, clientY) {
-    pointer.targetX = clientX;
-    pointer.targetY = clientY;
-    pointer.active = true;
+    pointer.targetX = (clientX / window.innerWidth) * 2 - 1;
+    pointer.targetY = (clientY / window.innerHeight) * 2 - 1;
   }
 
   window.addEventListener('mousemove', (e) => {
@@ -114,238 +331,226 @@
   }, { passive: true });
 
   window.addEventListener('mouseleave', () => {
-    pointer.targetX = -2000;
-    pointer.targetY = -2000;
-    pointer.active = false;
+    pointer.targetX = 0;
+    pointer.targetY = 0;
   });
 
-  // Mobile Touch Support
-  window.addEventListener('touchstart', (e) => {
-    if (e.touches && e.touches[0]) {
-      const t = e.touches[0];
-      onPointerMove(t.clientX, t.clientY);
-      triggerShockwave(t.clientX, t.clientY);
-    }
-  }, { passive: true });
-
-  window.addEventListener('touchmove', (e) => {
-    if (e.touches && e.touches[0]) {
-      const t = e.touches[0];
-      onPointerMove(t.clientX, t.clientY);
-    }
-  }, { passive: true });
-
-  window.addEventListener('touchend', () => {
-    pointer.targetX = -2000;
-    pointer.targetY = -2000;
-    pointer.active = false;
-  });
-
-  // Click / Tap Interactive Shockwave
-  function triggerShockwave(x, y) {
-    if (ripples.length > 5) ripples.shift();
-    ripples.push({
-      x,
-      y,
-      radius: 5,
-      maxRadius: Math.min(width, height) * 0.35,
-      alpha: 0.85,
-      speed: 7
-    });
-  }
-
-  window.addEventListener('click', (e) => {
-    triggerShockwave(e.clientX, e.clientY);
-  }, { passive: true });
-
-  /* ── Scroll & Phase Synchronization ── */
-  function updateScroll() {
-    scrollY = window.scrollY || window.pageYOffset;
+  /* ── 8. Scroll Flight Calculation ── */
+  function onScroll() {
+    const currentScrollY = window.scrollY || window.pageYOffset;
     const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-    scrollProgress = Math.min(1, Math.max(0, scrollY / maxScroll));
+    scrollProgress = Math.min(1, Math.max(0, currentScrollY / maxScroll));
 
-    for (let i = 0; i < PHASES.length; i++) {
-      if (scrollProgress <= PHASES[i].threshold || i === PHASES.length - 1) {
-        if (hudPhase && hudPhase.textContent !== PHASES[i].name) {
-          hudPhase.textContent = PHASES[i].name;
+    // Dynamic camera flight coordinates driven by scroll progress
+    targetCamZ = 24 - scrollProgress * 122; // Travel from +24 down to -98
+    targetCamY = -scrollProgress * 24;
+    targetCamX = Math.sin(scrollProgress * Math.PI * 1.5) * 5.5;
+
+    scrollVelocity = Math.abs(currentScrollY - lastScrollY);
+    lastScrollY = currentScrollY;
+
+    // HUD Update
+    for (let i = 0; i < CHAPTERS.length; i++) {
+      if (scrollProgress <= CHAPTERS[i].threshold || i === CHAPTERS.length - 1) {
+        if (hudPhase && hudPhase.textContent !== CHAPTERS[i].name) {
+          hudPhase.textContent = CHAPTERS[i].name;
         }
         break;
       }
     }
 
     if (hudCoords) {
-      hudCoords.textContent = `PROGRESS: ${(scrollProgress * 100).toFixed(0)}% · CLASS '30`;
+      hudCoords.textContent = `Z: ${currentCamZ.toFixed(0)}m · CLASS '30`;
     }
   }
 
-  window.addEventListener('scroll', updateScroll, { passive: true });
-  window.addEventListener('resize', resize, { passive: true });
+  window.addEventListener('scroll', onScroll, { passive: true });
 
-  /* ── High-Performance Render Loop ── */
+  function onResize() {
+    if (!renderer || !camera) return;
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight, false);
+  }
+
+  window.addEventListener('resize', onResize, { passive: true });
+
+  /* ── 9. Render & Animation Loop ── */
   let lastTime = performance.now();
 
-  function draw(currentTime) {
+  function animate(now) {
     if (!isTabActive) return;
-    animId = requestAnimationFrame(draw);
+    animId = requestAnimationFrame(animate);
 
-    const dt = Math.min((currentTime - lastTime) / 1000, 0.033);
-    lastTime = currentTime;
+    const dt = Math.min((now - lastTime) / 1000, 0.033);
+    lastTime = now;
+    const elapsed = now * 0.001;
 
-    ctx.clearRect(0, 0, width, height);
+    // Smooth pointer damping
+    pointer.x += (pointer.targetX - pointer.x) * 0.08;
+    pointer.y += (pointer.targetY - pointer.y) * 0.08;
 
-    // Smooth pointer spring interpolation
-    if (pointer.active) {
-      pointer.x += (pointer.targetX - pointer.x) * 0.15;
-      pointer.y += (pointer.targetY - pointer.y) * 0.15;
-    } else {
-      pointer.x = -2000;
-      pointer.y = -2000;
+    // Smooth camera travel interpolation (The "going with scrolling" feel)
+    currentCamZ += (targetCamZ - currentCamZ) * 0.065;
+    currentCamY += (targetCamY - currentCamY) * 0.065;
+    currentCamX += (targetCamX - currentCamX) * 0.065;
+
+    camera.position.x = currentCamX + pointer.x * 2.2;
+    camera.position.y = currentCamY - pointer.y * 1.8;
+    camera.position.z = currentCamZ;
+
+    // Parallax look-ahead
+    camera.rotation.y = -pointer.x * 0.12 + Math.sin(scrollProgress * Math.PI) * 0.08;
+    camera.rotation.x = pointer.y * 0.10;
+
+    // Starfield gentle rotation
+    if (starPoints) {
+      starPoints.rotation.y = elapsed * 0.015;
+      starPoints.rotation.z = elapsed * 0.008;
     }
 
-    // 1. Draw Deep Starlight Field (Layer 1)
-    for (let s of stars) {
-      s.phase += s.speed;
-      const alpha = Math.max(0.04, s.alpha + Math.sin(s.phase) * 0.12);
-      ctx.beginPath();
-      ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
-      ctx.fillStyle = `${COLOR_WHITE}${alpha})`;
-      ctx.fill();
+    // Animate Chapter 01 (Hero Icosahedron & Rings)
+    if (heroIcosahedron) {
+      heroIcosahedron.rotation.x = elapsed * 0.22;
+      heroIcosahedron.rotation.y = elapsed * 0.32;
+    }
+    if (heroInnerRing) {
+      heroInnerRing.rotation.z = -elapsed * 0.45;
+    }
+    if (heroOuterRing) {
+      heroOuterRing.rotation.y = elapsed * 0.35;
     }
 
-    // 2. Process & Draw Shockwave Ripples
-    for (let rIdx = ripples.length - 1; rIdx >= 0; rIdx--) {
-      const rip = ripples[rIdx];
-      rip.radius += rip.speed;
-      rip.alpha *= 0.94;
+    // Animate Chapter 02 (Work Ring)
+    if (workRingSystem) {
+      workRingSystem.rotation.y = elapsed * 0.28;
+      workRingSystem.rotation.z = Math.sin(elapsed * 0.3) * 0.15;
+    }
 
-      if (rip.alpha < 0.02 || rip.radius > rip.maxRadius) {
-        ripples.splice(rIdx, 1);
-        continue;
-      }
+    // Animate Chapter 03 (Journey Helix)
+    if (journeyHelix) {
+      journeyHelix.rotation.y = elapsed * 0.4;
+    }
 
-      ctx.beginPath();
-      ctx.arc(rip.x, rip.y, rip.radius, 0, Math.PI * 2);
-      ctx.strokeStyle = `${COLOR_LIME}${rip.alpha * 0.7})`;
-      ctx.lineWidth = 1.8;
-      ctx.stroke();
+    // Animate Chapter 04 (Stack Matrix)
+    if (stackMatrix) {
+      stackMatrix.rotation.x = elapsed * 0.25;
+      stackMatrix.rotation.y = elapsed * 0.35;
+    }
 
-      // Shockwave push on nearby particles
-      const rSq = rip.radius * rip.radius;
-      for (let p of particles) {
-        const dx = p.x - rip.x;
-        const dy = p.y - rip.y;
-        const dSq = dx * dx + dy * dy;
-        const diff = Math.abs(Math.sqrt(dSq) - rip.radius);
-        if (diff < 35) {
-          const push = (1 - diff / 35) * 1.8;
-          const angle = Math.atan2(dy, dx);
-          p.x += Math.cos(angle) * push;
-          p.y += Math.sin(angle) * push;
-          p.flare = Math.min(1, p.flare + 0.6);
-        }
+    // Animate Chapter 05 (Footer Portal)
+    if (footerPortal) {
+      footerPortal.rotation.z = elapsed * 0.18;
+    }
+
+    // Animate Shockwaves
+    for (let i = shockwaves.length - 1; i >= 0; i--) {
+      const sw = shockwaves[i];
+      sw.scale += 0.28;
+      sw.opacity *= 0.93;
+      sw.mesh.scale.set(sw.scale, sw.scale, 1);
+      sw.mat.opacity = sw.opacity;
+
+      if (sw.opacity < 0.02) {
+        scene.remove(sw.mesh);
+        sw.geo.dispose();
+        sw.mat.dispose();
+        shockwaves.splice(i, 1);
       }
     }
 
-    const maxLineDist = width < 820 ? 95 : 135;
-    const maxLineDistSq = maxLineDist * maxLineDist;
-    const maxMouseDist = pointer.radius;
-    const maxMouseDistSq = maxMouseDist * maxMouseDist;
-
-    // 3. Update & Render Interactive Constellation Mesh (Layer 2 & 3)
-    for (let i = 0; i < particles.length; i++) {
-      const p = particles[i];
-
-      // Organic drift with depth scaling
-      p.x += p.vx;
-      p.y += p.vy;
-
-      // Soft decay of energy flare
-      if (p.flare > 0.01) p.flare *= 0.92;
-      else p.flare = 0;
-
-      // Smooth bounce on canvas boundaries
-      if (p.x < 0) { p.x = 0; p.vx *= -1; }
-      else if (p.x > width) { p.x = width; p.vx *= -1; }
-      if (p.y < 0) { p.y = 0; p.vy *= -1; }
-      else if (p.y > height) { p.y = height; p.vy *= -1; }
-
-      // Gravitational pull & electric laser link to pointer
-      if (pointer.active) {
-        const dxm = pointer.x - p.x;
-        const dym = pointer.y - p.y;
-        const distSq = dxm * dxm + dym * dym;
-
-        if (distSq < maxMouseDistSq) {
-          const dist = Math.sqrt(distSq);
-          const force = (1 - dist / maxMouseDist) * 0.022 * p.depth;
-          p.vx += dxm * force;
-          p.vy += dym * force;
-
-          // Electric Cyan connection beam
-          const mAlpha = (1 - dist / maxMouseDist) * 0.42;
-          ctx.beginPath();
-          ctx.moveTo(p.x, p.y);
-          ctx.lineTo(pointer.x, pointer.y);
-          ctx.strokeStyle = `${COLOR_CYAN}${mAlpha})`;
-          ctx.lineWidth = 1.2;
-          ctx.stroke();
-        }
-      }
-
-      // Inter-node hairline constellation links
-      for (let j = i + 1; j < particles.length; j++) {
-        const p2 = particles[j];
-        const dx = p.x - p2.x;
-        const dy = p.y - p2.y;
-        const distSq = dx * dx + dy * dy;
-
-        if (distSq < maxLineDistSq) {
-          const dist = Math.sqrt(distSq);
-          const lineAlpha = (1 - dist / maxLineDist) * (0.24 + Math.max(p.flare, p2.flare) * 0.4);
-          ctx.beginPath();
-          ctx.moveTo(p.x, p.y);
-          ctx.lineTo(p2.x, p2.y);
-          ctx.strokeStyle = `${COLOR_LIME}${lineAlpha})`;
-          ctx.lineWidth = 0.9;
-          ctx.stroke();
-        }
-      }
-
-      // Draw Glowing Node
-      p.pulseOffset += 0.035;
-      const pulse = 1 + Math.sin(p.pulseOffset) * 0.15 + p.flare * 0.8;
-      const colorBase = p.isLime ? COLOR_LIME : COLOR_CYAN;
-
-      // Soft ambient glow halo
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.radius * 2.8 * pulse, 0, Math.PI * 2);
-      ctx.fillStyle = `${colorBase}${0.18 + p.flare * 0.35})`;
-      ctx.fill();
-
-      // Solid crisp core
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.radius * pulse, 0, Math.PI * 2);
-      ctx.fillStyle = `${colorBase}${0.95})`;
-      ctx.fill();
+    // Live HUD updates
+    if (hudCoords && Math.floor(now / 150) % 4 === 0) {
+      hudCoords.textContent = `Z: ${currentCamZ.toFixed(0)}m · CLASS '30`;
     }
+
+    renderer.render(scene, camera);
   }
 
+  /* ── 10. Tab Inactive / Battery Saver ── */
   document.addEventListener('visibilitychange', () => {
     isTabActive = !document.hidden;
     if (isTabActive && !animId) {
       lastTime = performance.now();
-      draw(lastTime);
+      animate(lastTime);
     } else if (!isTabActive && animId) {
       cancelAnimationFrame(animId);
       animId = null;
     }
   });
 
-  resize();
-  updateScroll();
+  if (initWebGL()) {
+    onScroll();
+    if (!prefersReducedMotion) {
+      lastTime = performance.now();
+      animate(lastTime);
+    } else {
+      camera.position.set(0, 0, 24);
+      renderer.render(scene, camera);
+    }
+  }
 
-  if (!prefersReducedMotion) {
-    lastTime = performance.now();
-    draw(lastTime);
+  /* ── 11. Zero-Error Fallback (if WebGL is blocked or disabled) ── */
+  function init2DFallback() {
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+    const count = window.innerWidth < 820 ? 30 : 60;
+    const particles = [];
+
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.45,
+        vy: (Math.random() - 0.5) * 0.45,
+        radius: Math.random() * 1.5 + 0.9,
+        color: Math.random() > 0.35 ? 'rgba(200, 245, 66, ' : 'rgba(56, 189, 248, '
+      });
+    }
+
+    function draw() {
+      if (!isTabActive) return;
+      ctx.clearRect(0, 0, width, height);
+
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0 || p.x > width) p.vx *= -1;
+        if (p.y < 0 || p.y > height) p.vy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.color + '0.7)';
+        ctx.fill();
+
+        for (let j = i + 1; j < particles.length; j++) {
+          const p2 = particles[j];
+          const dx = p.x - p2.x;
+          const dy = p.y - p2.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 110) {
+            const alpha = (1 - dist / 110) * 0.22;
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = `rgba(200, 245, 66, ${alpha})`;
+            ctx.lineWidth = 0.85;
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }, { passive: true });
+
+    draw();
   }
 })();
