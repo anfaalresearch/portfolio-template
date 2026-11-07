@@ -1,18 +1,20 @@
 /**
  * ══════════════════════════════════════════════════════════════════
- * CYBER GATEWAY & CODE HIGHWAY — Scroll-Driven WebGL Experience
+ * CYBER GATEWAY & 3D GEOMETRIC HIGHWAY — WebGL Spatial Experience
  * ══════════════════════════════════════════════════════════════════
  * Concept:
  *  - Hero: Sleek Cyber Gateway stands in deep space. Base is obsidian #07080a.
- *          ZERO background clutter, zero blobs, zero floating boxes in Hero.
+ *          ZERO clutter, zero blobs, zero floating boxes in Hero.
  *          White headings and copy are 100% crisp and readable.
  *  - Scroll (0% -> 15%): The hydraulic blast doors slide open to left & right.
  *  - Transit (15% -> 85%): Camera accelerates forward through open door into
- *            the 3D Code Highway. Neon ribs, laser rails, and floating code
- *            holograms stream exclusively along the FAR PERIPHERY margins.
- *            The center reading column remains completely unobstructed!
+ *            the 3D Code Highway.
+ *            Featuring floating 3D Wireframe Hexagons & Geodesic Tech Spheres
+ *            with orbital rings, tumbling gently in depth exclusively along
+ *            the FAR PERIPHERY margins.
+ *            Zero plain flat squares · Center reading column 100% unobstructed.
  *  - Destination (85% -> 100%): Arrives at Contact hub with completed circuit.
- *  - Locked 60-120 FPS · WCAG AAA contrast · Restrained opacity.
+ *  - Locked 60-120 FPS · Center-Left Waypoint HUD · Restrained Opacity.
  */
 
 // Tunable Configuration Object
@@ -43,7 +45,6 @@ if (typeof window !== 'undefined') {
   if (!canvas) return;
 
   const hudPhase = document.getElementById('hud-phase');
-  const hudCoords = document.getElementById('hud-coords');
   const exploreHint = document.getElementById('explore-hint');
 
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -55,34 +56,7 @@ if (typeof window !== 'undefined') {
     return;
   }
 
-  /* ── 1. AUTHENTIC DEVELOPER CODE SNIPPETS (Floating 3D Holograms) ── */
-  const CODE_SNIPPETS = [
-    { text: '// CORE_KERNEL :: FIRST_PRINCIPLES', accent: true },
-    { text: 'template <typename T> class NetworkCore;', accent: false },
-    { text: 'git commit -m "feat: zero slop architecture"', accent: true },
-    { text: '0x7FFF5FBFFD04 · STACK_FRAME_ALLOC', accent: false },
-    { text: 'FileForge::processBuffer(stream, 4096);', accent: false },
-    { text: 'ACL_RULE::PERMIT_PACKET_INSPECT()', accent: true },
-    { text: 'std::vector<uint32_t> dataPipeline;', accent: false },
-    { text: 'while (socket.listen()) dispatch();', accent: false },
-    { text: 'BrokenKey::heatmapEngine.compute();', accent: true },
-    { text: 'O(log N) · BALANCED_BINARY_SEARCH', accent: false },
-    { text: 'syscall(SYS_write, 1, buffer, len);', accent: true },
-    { text: 'Class of 2030 · TKMCE CS & AI', accent: true },
-    { text: 'void* mem = mmap(0, 65536, PROT_READ);', accent: false },
-    { text: 'algorithm::quickSort(arr, 0, N - 1);', accent: false },
-    { text: 'LofiTimer::startDeepWorkSession(25m);', accent: true },
-    { text: 'asm volatile("nop" ::: "memory");', accent: false },
-    { text: 'CYBER_DEFENSE::FIREWALL_ACTIVE', accent: true },
-    { text: 'std::atomic<bool> isRunning{true};', accent: false },
-    { text: 'DEV_STARTER::RESOURCE_INDEX_READY', accent: true },
-    { text: 'uint64_t hash = MurmurHash3_x64_128();', accent: false },
-    { text: 'pthread_mutex_lock(&packet_queue);', accent: false },
-    { text: 'Engineering from First Principles', accent: true },
-    { text: 'CIRCUIT_COMPLETE · COLLABORATE', accent: true }
-  ];
-
-  /* ── 2. SECTION CHECKPOINTS DEFINITION ──────────────────────── */
+  /* ── 1. SECTION CHECKPOINTS DEFINITION ──────────────────────── */
   const CHECKPOINTS = [
     { id: 'about',   phase: '01 / PORTAL GATEWAY',       name: 'Origin' },
     { id: 'work',    phase: '02 / SELECTED WORK',        name: 'Selected Work' },
@@ -91,11 +65,12 @@ if (typeof window !== 'undefined') {
     { id: 'contact', phase: '05 / DESTINATION REACHED',  name: 'Collaborate' }
   ];
 
-  /* ── 3. THREE.JS SCENE SETUP ────────────────────────────────── */
+  /* ── 2. THREE.JS SCENE SETUP ────────────────────────────────── */
   let renderer, scene, camera;
   let tunnelSpline;
   let doorGroup, doorLeft, doorRight, doorRimOuter, doorRimInner, doorLockBadge;
-  let tunnelRingsGroup, warpRailsGroup, codePlanesGroup, codeDustPoints;
+  let tunnelRingsGroup, warpRailsGroup, holoObjectsGroup, codeDustPoints;
+  const holo3DItems = [];
 
   const scrollRef = {
     progress: 0,
@@ -129,7 +104,6 @@ if (typeof window !== 'undefined') {
     renderer.setSize(window.innerWidth, window.innerHeight, false);
 
     scene = new THREE.Scene();
-    // Pure dark obsidian fog: dissolves elements cleanly into deep space
     scene.fog = new THREE.FogExp2(CONFIG.bgColorHex, 0.018);
 
     camera = new THREE.PerspectiveCamera(46, window.innerWidth / window.innerHeight, 0.1, 260);
@@ -138,13 +112,13 @@ if (typeof window !== 'undefined') {
     buildSpline();
     buildCyberDoor();
     buildCodeHighway();
-    buildCodePlanes();
+    buildHolo3DObjects();
     buildCodeDust();
 
     return true;
   }
 
-  /* ── 4. 3D TUNNEL SPLINE PATH ───────────────────────────────── */
+  /* ── 3. 3D TUNNEL SPLINE PATH ───────────────────────────────── */
   function buildSpline() {
     // Smooth spline starting at portal door and traveling through depth
     // Door is at Z = 0 (u ~ 0.11)
@@ -161,7 +135,7 @@ if (typeof window !== 'undefined') {
     tunnelSpline = new THREE.CatmullRomCurve3(points, false, 'centripetal', 0.45);
   }
 
-  /* ── 5. FUTURISTIC 3D CYBER DOOR (Opens on Scroll) ─────────── */
+  /* ── 4. FUTURISTIC 3D CYBER DOOR (Opens on Scroll) ─────────── */
   function createDoorPanelTexture(isLeft) {
     const c = document.createElement('canvas');
     c.width = 512;
@@ -234,6 +208,31 @@ if (typeof window !== 'undefined') {
     return tex;
   }
 
+  function createLockBadgeTexture() {
+    const c = document.createElement('canvas');
+    c.width = 512;
+    c.height = 110;
+    const ctx = c.getContext('2d');
+
+    ctx.fillStyle = 'rgba(10, 14, 22, 0.94)';
+    ctx.fillRect(0, 0, 512, 110);
+
+    ctx.strokeStyle = 'rgba(200, 245, 66, 0.85)';
+    ctx.lineWidth = 2.5;
+    ctx.strokeRect(3, 3, 506, 104);
+
+    ctx.fillStyle = '#c8f542';
+    ctx.fillRect(16, 20, 6, 70);
+
+    ctx.font = 'bold 21px "Space Grotesk", monospace, sans-serif';
+    ctx.fillStyle = '#c8f542';
+    ctx.fillText('[ ⬡ CYBER GATEWAY · SCROLL TO OPEN & ENTER ]', 32, 64);
+
+    const tex = new THREE.CanvasTexture(c);
+    tex.minFilter = THREE.LinearFilter;
+    return tex;
+  }
+
   function buildCyberDoor() {
     doorGroup = new THREE.Group();
     doorGroup.position.set(0, 0, CONFIG.doorZ);
@@ -284,9 +283,8 @@ if (typeof window !== 'undefined') {
     doorGroup.add(doorRight);
 
     // Central Status Lock Badge
-    const badgeTex = createCodeTextTexture('[ ⬡ CYBER GATEWAY · SCROLL TO OPEN & ENTER ]', true);
     const badgeMat = new THREE.MeshBasicMaterial({
-      map: badgeTex,
+      map: createLockBadgeTexture(),
       transparent: true,
       opacity: 0.92,
       blending: THREE.AdditiveBlending
@@ -299,24 +297,23 @@ if (typeof window !== 'undefined') {
     scene.add(doorGroup);
   }
 
-  /* ── 6. 3D HIGHWAY TUNNEL RINGS & WARP RAILS ─────────────────── */
+  /* ── 5. 3D HIGHWAY TUNNEL RINGS & WARP RAILS ─────────────────── */
   function buildCodeHighway() {
     tunnelRingsGroup = new THREE.Group();
-    const ringCount = 22;
+    const ringCount = 20;
 
     for (let i = 0; i < ringCount; i++) {
-      // ONLY place tunnel rings AFTER the door (u from 0.15 to 0.96)
-      // Never place rings in front of the door in the Hero space!
-      const u = 0.15 + (i / ringCount) * 0.81;
+      // ONLY place tunnel rings AFTER the door (u from 0.16 to 0.95)
+      const u = 0.16 + (i / ringCount) * 0.79;
       const pt = tunnelSpline.getPoint(u);
       const tangent = tunnelSpline.getTangent(u).normalize();
 
       const isLime = i % 2 === 0;
-      const ringGeo = new THREE.TorusGeometry(CONFIG.tunnelRadius, 0.028, 12, 48);
+      const ringGeo = new THREE.TorusGeometry(CONFIG.tunnelRadius, 0.026, 12, 48);
       const ringMat = new THREE.MeshBasicMaterial({
         color: isLime ? CONFIG.accentColorHex : CONFIG.cyanColorHex,
         transparent: true,
-        opacity: 0.15, // Restrained opacity for zero visual competition with text
+        opacity: 0.14,
         blending: THREE.AdditiveBlending
       });
       const ringMesh = new THREE.Mesh(ringGeo, ringMat);
@@ -325,18 +322,17 @@ if (typeof window !== 'undefined') {
 
       tunnelRingsGroup.add(ringMesh);
     }
-    // Hidden at Hero, revealed when scrolling
     tunnelRingsGroup.visible = false;
     scene.add(tunnelRingsGroup);
 
-    // Longitudinal Warp Speed Strands (Laser Rails along Tunnel)
+    // Longitudinal Warp Speed Strands
     warpRailsGroup = new THREE.Group();
     const railCount = 6;
     const samples = 64;
 
     try {
       const frames = tunnelSpline.computeFrenetFrames(samples, false);
-      const startSample = Math.floor(samples * 0.14); // Start strictly AFTER the door
+      const startSample = Math.floor(samples * 0.15);
 
       for (let r = 0; r < railCount; r++) {
         const angle = (r / railCount) * Math.PI * 2;
@@ -363,7 +359,7 @@ if (typeof window !== 'undefined') {
         const railMat = new THREE.LineBasicMaterial({
           color: isLime ? CONFIG.accentColorHex : CONFIG.cyanColorHex,
           transparent: true,
-          opacity: 0.18,
+          opacity: 0.16,
           blending: THREE.AdditiveBlending
         });
         const railLine = new THREE.Line(railGeo, railMat);
@@ -372,98 +368,167 @@ if (typeof window !== 'undefined') {
       warpRailsGroup.visible = false;
       scene.add(warpRailsGroup);
     } catch (e) {
-      console.warn('[CyberPortal] Warp rails generation fallback:', e);
+      console.warn('[CyberPortal] Warp rails fallback:', e);
     }
   }
 
-  /* ── 7. HOLOGRAPHIC FLOATING CODE PLANES ─────────────────────── */
-  function createCodeTextTexture(text, isAccent) {
+  /* ── 6. 3D HEXAGONS & GEODESIC TECH SPHERES (Sparse & Premium) ─ */
+  function createHexBadgeTexture(label, isLime) {
     const c = document.createElement('canvas');
-    c.width = 768;
-    c.height = 120;
+    c.width = 256;
+    c.height = 256;
     const ctx = c.getContext('2d');
 
-    // Deep solid obsidian terminal box (NormalBlending ensures crisp readability)
-    ctx.fillStyle = 'rgba(10, 14, 22, 0.95)';
-    ctx.fillRect(0, 0, 768, 120);
+    ctx.clearRect(0, 0, 256, 256);
 
-    // Subtle technical grid line
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
-    ctx.lineWidth = 1;
+    ctx.strokeStyle = isLime ? 'rgba(200, 245, 66, 0.85)' : 'rgba(56, 189, 248, 0.85)';
+    ctx.lineWidth = 4;
     ctx.beginPath();
-    ctx.moveTo(0, 60);
-    ctx.lineTo(768, 60);
+    ctx.arc(128, 128, 108, 0, Math.PI * 2);
     ctx.stroke();
 
-    // Glowing border
-    ctx.strokeStyle = isAccent ? 'rgba(200, 245, 66, 0.75)' : 'rgba(56, 189, 248, 0.65)';
-    ctx.lineWidth = 2.5;
-    ctx.strokeRect(4, 4, 760, 112);
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(128, 128, 92, 0, Math.PI * 2);
+    ctx.stroke();
 
-    // Accent indicator pill
-    ctx.fillStyle = isAccent ? '#c8f542' : '#38bdf8';
-    ctx.fillRect(18, 20, 7, 80);
-
-    // Monospace code typography
-    ctx.font = 'bold 28px "JetBrains Mono", "Space Grotesk", monospace, sans-serif';
-    ctx.fillStyle = isAccent ? '#c8f542' : '#e2e8f0';
-    ctx.fillText(text, 40, 70);
+    ctx.font = 'bold 36px "Space Grotesk", "JetBrains Mono", monospace, sans-serif';
+    ctx.fillStyle = isLime ? '#c8f542' : '#38bdf8';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(label, 128, 128);
 
     const tex = new THREE.CanvasTexture(c);
     tex.minFilter = THREE.LinearFilter;
     return tex;
   }
 
-  function buildCodePlanes() {
-    codePlanesGroup = new THREE.Group();
+  function buildHolo3DObjects() {
+    holoObjectsGroup = new THREE.Group();
 
-    CODE_SNIPPETS.forEach((snippet, i) => {
-      // ONLY start code planes well AFTER the door threshold (u from 0.16 to 0.95)
-      // Never place code planes in front of the door in the Hero space!
-      const u = 0.16 + (i / CODE_SNIPPETS.length) * 0.80;
-      const pt = tunnelSpline.getPoint(u);
+    // 10 Sparse, high-end 3D elements alternating between 3D Hexagons and Tech Spheres
+    const HOLO_ITEMS = [
+      { type: 'hex',    label: 'C++',       u: 0.18, isLime: true },
+      { type: 'sphere', label: 'ORB_01',    u: 0.26, isLime: false },
+      { type: 'hex',    label: '0x7FFF',    u: 0.35, isLime: false },
+      { type: 'sphere', label: 'ORB_02',    u: 0.44, isLime: true },
+      { type: 'hex',    label: 'GIT',       u: 0.52, isLime: true },
+      { type: 'sphere', label: 'ORB_03',    u: 0.61, isLime: false },
+      { type: 'hex',    label: 'ACL_SIM',   u: 0.70, isLime: false },
+      { type: 'sphere', label: 'ORB_04',    u: 0.78, isLime: true },
+      { type: 'hex',    label: 'O(log N)',  u: 0.85, isLime: true },
+      { type: 'sphere', label: 'ORB_05',    u: 0.92, isLime: false }
+    ];
 
-      // Position code banners exclusively on the FAR PERIPHERY (left & right margins)
-      // This leaves the entire center column (where text & cards sit) 100% clear!
+    HOLO_ITEMS.forEach((item, i) => {
+      const pt = tunnelSpline.getPoint(item.u);
       const isLeft = (i % 2 === 0);
-      const angle = isLeft ? (Math.PI * 0.92 + (Math.random() - 0.5) * 0.25) : (Math.PI * 0.08 + (Math.random() - 0.5) * 0.25);
-      const radius = CONFIG.tunnelRadius * (0.86 + Math.random() * 0.18);
+      const angle = isLeft ? (Math.PI * 0.92 + (Math.random() - 0.5) * 0.15) : (Math.PI * 0.08 + (Math.random() - 0.5) * 0.15);
+      const radius = CONFIG.tunnelRadius * 0.92;
 
       const ox = Math.cos(angle) * radius;
-      const oy = (Math.sin(angle) * (radius * 0.52)) + ((Math.random() - 0.5) * 1.5);
-      const oz = (Math.random() - 0.5) * 2.0;
+      const oy = Math.sin(angle) * (radius * 0.5) + (Math.random() - 0.5) * 1.2;
+      const oz = (Math.random() - 0.5) * 2;
 
-      const planePos = pt.clone().add(new THREE.Vector3(ox, oy, oz));
+      const pos = pt.clone().add(new THREE.Vector3(ox, oy, oz));
+      const objGroup = new THREE.Group();
+      objGroup.position.copy(pos);
 
-      const tex = createCodeTextTexture(snippet.text, snippet.accent);
-      const mat = new THREE.MeshBasicMaterial({
-        map: tex,
-        side: THREE.DoubleSide,
-        transparent: true,
-        opacity: 0.65,
-        blending: THREE.NormalBlending, // Normal blending prevents glare/washout!
-        depthWrite: false
+      let orbitalRingMesh = null;
+
+      if (item.type === 'hex') {
+        // ── 3D Hexagonal Prism ──
+        const hexGeo = new THREE.CylinderGeometry(1.6, 1.6, 0.4, 6);
+        const hexMat = new THREE.MeshBasicMaterial({
+          color: 0x090c14,
+          transparent: true,
+          opacity: 0.85
+        });
+        const hexMesh = new THREE.Mesh(hexGeo, hexMat);
+        objGroup.add(hexMesh);
+
+        // Glowing wireframe perimeter edges
+        const edgeGeo = new THREE.EdgesGeometry(hexGeo);
+        const edgeMat = new THREE.LineBasicMaterial({
+          color: item.isLime ? CONFIG.accentColorHex : CONFIG.cyanColorHex,
+          transparent: true,
+          opacity: 0.68,
+          blending: THREE.AdditiveBlending
+        });
+        const edgeLines = new THREE.LineSegments(edgeGeo, edgeMat);
+        objGroup.add(edgeLines);
+
+        // Front Face Holographic Badge
+        const badgeTex = createHexBadgeTexture(item.label, item.isLime);
+        const badgeMat = new THREE.MeshBasicMaterial({
+          map: badgeTex,
+          transparent: true,
+          opacity: 0.92,
+          blending: THREE.AdditiveBlending
+        });
+        const badgePlane = new THREE.Mesh(new THREE.PlaneGeometry(1.8, 1.8), badgeMat);
+        badgePlane.position.set(0, 0.22, 0);
+        badgePlane.rotation.x = -Math.PI / 2;
+        objGroup.add(badgePlane);
+
+      } else {
+        // ── 3D Geodesic Tech Sphere ──
+        const sphereGeo = new THREE.IcosahedronGeometry(1.25, 1);
+        const sphereMat = new THREE.MeshBasicMaterial({
+          color: item.isLime ? CONFIG.accentColorHex : CONFIG.cyanColorHex,
+          wireframe: true,
+          transparent: true,
+          opacity: 0.38,
+          blending: THREE.AdditiveBlending
+        });
+        const sphereMesh = new THREE.Mesh(sphereGeo, sphereMat);
+        objGroup.add(sphereMesh);
+
+        // Luminous Core Particle
+        const coreGeo = new THREE.SphereGeometry(0.32, 12, 12);
+        const coreMat = new THREE.MeshBasicMaterial({
+          color: 0xf8fafc,
+          transparent: true,
+          opacity: 0.88,
+          blending: THREE.AdditiveBlending
+        });
+        const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+        objGroup.add(coreMesh);
+
+        // Concentric Orbital Ring
+        const ringGeo = new THREE.TorusGeometry(1.85, 0.024, 8, 36);
+        const ringMat = new THREE.MeshBasicMaterial({
+          color: item.isLime ? CONFIG.cyanColorHex : CONFIG.accentColorHex,
+          transparent: true,
+          opacity: 0.45,
+          blending: THREE.AdditiveBlending
+        });
+        orbitalRingMesh = new THREE.Mesh(ringGeo, ringMat);
+        orbitalRingMesh.rotation.x = Math.PI / 3;
+        orbitalRingMesh.rotation.y = Math.PI / 4;
+        objGroup.add(orbitalRingMesh);
+      }
+
+      holoObjectsGroup.add(objGroup);
+
+      holo3DItems.push({
+        group: objGroup,
+        orbitalRing: orbitalRingMesh,
+        rx: 0.25 + (i % 3) * 0.15,
+        ry: 0.35 + (i % 2) * 0.2,
+        rz: 0.15 + (i % 4) * 0.1,
+        ringSpeed: 0.8 + (i % 3) * 0.4
       });
-
-      const planeGeo = new THREE.PlaneGeometry(4.2, 0.88);
-      const mesh = new THREE.Mesh(planeGeo, mat);
-      mesh.position.copy(planePos);
-
-      // Orient backward towards incoming camera flight path
-      // This ensures text is facing oncoming viewer as they scroll!
-      mesh.lookAt(pt.x * 0.3, pt.y * 0.3, pt.z + 14);
-
-      codePlanesGroup.add(mesh);
     });
 
-    // Hidden at Hero, revealed when scrolling
-    codePlanesGroup.visible = false;
-    scene.add(codePlanesGroup);
+    holoObjectsGroup.visible = false;
+    scene.add(holoObjectsGroup);
   }
 
-  /* ── 8. HYPERSPACE STREAMING PARTICLES ──────────────────────── */
+  /* ── 7. HYPERSPACE STREAMING PARTICLES ──────────────────────── */
   function buildCodeDust() {
-    const count = isMobile ? 180 : 380;
+    const count = isMobile ? 160 : 340;
     const coords = new Float32Array(count * 3);
     const colors = new Float32Array(count * 3);
 
@@ -497,7 +562,7 @@ if (typeof window !== 'undefined') {
       size: isMobile ? 1.4 : 1.8,
       vertexColors: true,
       transparent: true,
-      opacity: 0.42, // Subdued stardust
+      opacity: 0.38,
       blending: THREE.AdditiveBlending,
       depthWrite: false
     });
@@ -506,7 +571,7 @@ if (typeof window !== 'undefined') {
     scene.add(codeDustPoints);
   }
 
-  /* ── 9. CAMERA & DOOR ANIMATION LOOP ────────────────────────── */
+  /* ── 8. CAMERA, DOOR & 3D GEOMETRY ANIMATION LOOP ────────────── */
   function updatePortalAndCamera(now, dt) {
     // 1. Smooth scroll progress interpolation
     const target = scrollRef.progress;
@@ -538,14 +603,26 @@ if (typeof window !== 'undefined') {
     if (tunnelRingsGroup) {
       tunnelRingsGroup.visible = isEnteringTunnel;
     }
-    if (codePlanesGroup) {
-      codePlanesGroup.visible = isEnteringTunnel;
+    if (holoObjectsGroup) {
+      holoObjectsGroup.visible = isEnteringTunnel;
     }
     if (warpRailsGroup) {
       warpRailsGroup.visible = isEnteringTunnel;
     }
 
-    // 4. Camera Flight Along Tunnel Spline
+    // 4. Smooth continuous 3D tumbling of Hexagons and Spheres
+    if (isEnteringTunnel) {
+      holo3DItems.forEach((item) => {
+        item.group.rotation.x += item.rx * dt;
+        item.group.rotation.y += item.ry * dt;
+        item.group.rotation.z += item.rz * dt;
+        if (item.orbitalRing) {
+          item.orbitalRing.rotation.z += item.ringSpeed * dt;
+        }
+      });
+    }
+
+    // 5. Camera Flight Along Tunnel Spline
     tunnelSpline.getPoint(u, _vSplinePt);
 
     // Mouse parallax damping
@@ -565,19 +642,13 @@ if (typeof window !== 'undefined') {
     tunnelSpline.getPoint(lookAheadU, _vLookAt);
     camera.lookAt(_vLookAt);
 
-    // 5. Subtle rotation on dust particles
+    // 6. Subtle rotation on dust particles
     if (codeDustPoints) {
       codeDustPoints.rotation.z = now * 0.00012;
     }
-
-    // 6. Update HUD Real-Time Telemetry
-    if (hudCoords && Math.floor(now / 110) % 3 === 0) {
-      const travelMeters = Math.max(0, (CONFIG.cameraStartPosZ - camera.position.z) * 1.2);
-      hudCoords.textContent = `TUNNEL: ${travelMeters.toFixed(0)}m · CODE_SPEED: OK`;
-    }
   }
 
-  /* ── 10. SCROLL & SECTION INTEGRATION ───────────────────────── */
+  /* ── 9. SCROLL & SECTION INTEGRATION ────────────────────────── */
   function setupScrollAndSync() {
     const gsap = window.gsap;
     const ScrollTrigger = window.ScrollTrigger;
@@ -665,7 +736,7 @@ if (typeof window !== 'undefined') {
     }
   }
 
-  /* ── 11. MOUSE PARALLAX & RESIZE ────────────────────────────── */
+  /* ── 10. MOUSE PARALLAX & RESIZE ────────────────────────────── */
   function setupInteractions() {
     window.addEventListener('mousemove', (e) => {
       mouse.targetX = (e.clientX / window.innerWidth) * 2 - 1;
@@ -696,7 +767,7 @@ if (typeof window !== 'undefined') {
     }, false);
   }
 
-  /* ── 12. UNIFIED RENDER LOOP ────────────────────────────────── */
+  /* ── 11. UNIFIED RENDER LOOP ────────────────────────────────── */
   function startRenderLoop() {
     let lastTime = performance.now();
 
@@ -721,7 +792,7 @@ if (typeof window !== 'undefined') {
     }
   }
 
-  /* ── 13. BOOTSTRAP ──────────────────────────────────────────── */
+  /* ── 12. BOOTSTRAP ──────────────────────────────────────────── */
   function boot() {
     const success = initThree();
     if (!success) return;

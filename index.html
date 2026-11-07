@@ -32,12 +32,10 @@
   <canvas id="world-canvas" class="world-canvas" aria-hidden="true"></canvas>
   <div class="world-vignette" aria-hidden="true"></div>
 
-  <!-- WebGL2 3D Telemetry HUD (Scrolltide & Cyber Space) -->
+  <!-- WebGL2 3D Telemetry HUD (Center-Left Waypoint Tracker) -->
   <div class="world-hud" aria-hidden="true">
     <span class="hud-dot"></span>
-    <span class="hud-phase" id="hud-phase">01 / ORIGIN</span>
-    <span class="hud-rule"></span>
-    <span class="hud-coords" id="hud-coords">Z: +22.0</span>
+    <span class="hud-phase" id="hud-phase">01 / PORTAL GATEWAY</span>
   </div>
 
   <!-- Technical matrix grid overlay -->
@@ -704,6 +702,26 @@
           frame.style.transform = 'perspective(900px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg) scale(' + scale + ')';
           requestAnimationFrame(tickTilt);
         })();
+      }
+
+      /* ── 3D Project Cards Mouse Tilt & Dynamic Spotlight ── */
+      if (hasFinePointer && !prefersReducedMotion) {
+        document.querySelectorAll('.projects-grid .card').forEach(card => {
+          card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width - 0.5;
+            const y = (e.clientY - rect.top) / rect.height - 0.5;
+            const rotX = -y * 10;
+            const rotY = x * 12;
+
+            card.style.setProperty('--mouse-x', `${(e.clientX - rect.left).toFixed(1)}px`);
+            card.style.setProperty('--mouse-y', `${(e.clientY - rect.top).toFixed(1)}px`);
+            card.style.transform = `perspective(1000px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) translateY(-8px) scale3d(1.018, 1.018, 1.018)`;
+          });
+          card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0) scale3d(1, 1, 1)';
+          });
+        });
       }
 
       /* ── 3D Social Cards Mouse Tilt Micro-Interaction ── */
