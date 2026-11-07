@@ -499,6 +499,12 @@ if (typeof window !== 'undefined') {
     scrollRef.smoothed += (target - scrollRef.smoothed) * CONFIG.smoothing;
     const u = Math.min(0.999, Math.max(0.0001, scrollRef.smoothed));
 
+    // Dynamic Header Scroll Progress Bar (Smooth 60-120fps hardware accelerated)
+    const navProg = document.getElementById('nav-progress');
+    if (navProg) {
+      navProg.style.transform = `scaleX(${u})`;
+    }
+
     // 2. Aperture Opening Animation (Rings expand smoothly on initial scroll)
     const apertureOpen = Math.min(1.0, u * 6.5);
     if (apertureOuterRim) {

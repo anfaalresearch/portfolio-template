@@ -237,6 +237,26 @@ ul    { list-style: none; }
   letter-spacing: 0.04em;
   color: var(--fg);
 }
+.nav-name--short {
+  display: none;
+}
+.nav-name--full {
+  display: inline-block;
+}
+.nav-progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left center;
+  background: linear-gradient(90deg, var(--green), var(--cyan));
+  box-shadow: 0 0 10px rgba(200, 245, 66, 0.6);
+  pointer-events: none;
+  z-index: 102;
+  will-change: transform;
+}
 .nav-college {
   font-size: 0.62rem;
   font-weight: 600;
@@ -1701,20 +1721,9 @@ section.contact {
     gap: 32px;
   }
 }
-@media (max-width: 580px) {
-  .footer-columns {
-    grid-template-columns: 1fr;
-    gap: 28px;
-  }
-  .footer-bottom-bar {
-    flex-direction: column;
-    text-align: center;
-    gap: 12px;
-  }
-}
 
 /* ═══════════════════════════════════════════════════════
-   ULTRA-SMOOTH MOBILE OPTIMIZATIONS
+   ULTRA-SMOOTH MOBILE OPTIMIZATIONS & AIRY SPACING
    ═══════════════════════════════════════════════════════ */
 
 @media (hover: none), (pointer: coarse) {
@@ -1737,126 +1746,206 @@ section.contact {
 }
 
 @media (max-width: 820px) {
+  /* 1. Eliminate Left HUD Map on mobile to remove distraction and free screen width */
   .world-hud {
-    font-size: 0.56rem !important;
-    padding: 6px 12px !important;
-    left: 8px !important;
-    letter-spacing: 0.1em !important;
+    display: none !important;
   }
+
+  /* 2. Enhanced Mobile Header with Frosted Glass & Safe Spacing */
   .nav {
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    background: #07080a !important;
-    padding: 0 18px;
-    height: 58px;
+    height: 60px !important;
+    padding: 0 18px !important;
+    background: rgba(7, 8, 10, 0.82) !important;
+    backdrop-filter: blur(18px) !important;
+    -webkit-backdrop-filter: blur(18px) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+  }
+  .nav-brand {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+  .nav-name--full {
+    display: none !important;
+  }
+  .nav-name--short {
+    display: inline-block !important;
+    font-size: 0.95rem !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.05em !important;
+    color: #fff !important;
+  }
+  .nav-college {
+    display: inline-flex !important;
+    font-size: 0.6rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.08em !important;
+    padding: 2px 7px !important;
   }
   .nav-links {
     display: none !important;
   }
-  .nav-college {
-    display: none !important;
+  .nav-cta {
+    font-size: 0.7rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.06em !important;
+    padding: 7px 14px !important;
+    border-radius: 999px !important;
   }
 
+  /* 3. Generous, Airy Mobile Spacing Across Sections */
+  :root {
+    --pad-x: 20px;
+  }
+
+  /* ── Hero Section (Airy, Balanced, Open) ── */
   .hero {
-    padding: 76px 18px 36px !important;
+    padding: clamp(88px, 11vh, 108px) 20px 48px !important;
     min-height: auto !important;
   }
   .hero-topbar {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 8px;
-    margin-bottom: 22px;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 10px !important;
+    margin-bottom: 28px !important;
   }
   .hero-identity-badge {
-    justify-content: center;
-    padding: 4px 10px;
-    font-size: 0.65rem;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 6px 14px !important;
+    font-size: 0.66rem !important;
+    letter-spacing: 0.08em !important;
+    background: rgba(255, 255, 255, 0.04) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  }
+  .hero-status {
+    font-size: 0.64rem !important;
+    letter-spacing: 0.06em !important;
+    gap: 7px !important;
   }
   .hero-location {
-    font-size: 0.62rem;
+    font-size: 0.62rem !important;
+    color: var(--muted) !important;
+    letter-spacing: 0.06em !important;
   }
-
   .hero-grid {
     grid-template-columns: 1fr !important;
-    gap: 22px !important;
-    text-align: center;
+    gap: 28px !important;
+    text-align: center !important;
   }
-
   .hero-visual {
-    order: -1;
-    margin: 0 auto;
+    order: -1 !important;
+    margin: 6px auto 22px !important;
   }
   .hero-frame {
-    width: 130px !important;
-    height: 130px !important;
-    border-radius: 20px !important;
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
-    border: 2px solid rgba(200, 245, 66, 0.4);
+    width: 112px !important;
+    height: 112px !important;
+    border-radius: 28px !important;
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.7), 0 0 20px rgba(200, 245, 66, 0.16) !important;
+    border: 2px solid rgba(200, 245, 66, 0.5) !important;
     transform: none !important;
   }
   .hero-photo {
-    width: 130px !important;
-    height: 130px !important;
-    border-radius: 18px !important;
+    width: 112px !important;
+    height: 112px !important;
+    border-radius: 26px !important;
     border: none !important;
   }
-
-  .frame-tag {
-    display: none !important;
-  }
+  .frame-tag,
   .frame-corner {
     display: none !important;
   }
-
   .hero-pretitle {
-    justify-content: center;
-    margin-bottom: 12px;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin-bottom: 14px !important;
   }
   .pretitle-tag {
-    font-size: 0.6rem;
+    font-size: 0.62rem !important;
+    padding: 3px 8px !important;
   }
   .pretitle-college {
-    font-size: 0.65rem;
+    font-size: 0.64rem !important;
   }
-
   .hero-heading {
-    font-size: clamp(2rem, 8.5vw, 2.6rem) !important;
-    line-height: 1.1 !important;
-    margin-bottom: 14px !important;
+    font-size: clamp(2.15rem, 8vw, 2.65rem) !important;
+    line-height: 1.15 !important;
+    letter-spacing: -0.02em !important;
+    margin-bottom: 18px !important;
   }
   .hero-sub {
     font-size: 0.92rem !important;
-    line-height: 1.62 !important;
-    margin: 0 auto 20px !important;
+    line-height: 1.68 !important;
+    max-width: 95% !important;
+    margin: 0 auto 28px !important;
   }
   .hero-actions {
-    justify-content: center;
-    gap: 12px;
-    margin-bottom: 20px;
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 12px !important;
+    margin-bottom: 26px !important;
   }
-  .btn {
-    padding: 10px 18px;
-    font-size: 0.72rem;
+  .hero-actions .btn {
+    width: 100% !important;
+    min-height: 48px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 12px 20px !important;
+    font-size: 0.8rem !important;
+    border-radius: 10px !important;
   }
   .hero-tags {
-    justify-content: center;
-    font-size: 0.64rem;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    margin-top: 10px !important;
+  }
+  .hero-tags span:not(.sep) {
+    background: rgba(255, 255, 255, 0.035) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    padding: 4px 10px !important;
+    border-radius: 999px !important;
+    font-size: 0.62rem !important;
+    letter-spacing: 0.06em !important;
+    color: var(--muted) !important;
+  }
+  .hero-tags .sep {
+    display: none !important;
+  }
+  .hero-3d-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+    margin-top: 36px !important;
   }
 
+  /* ── Spacious Section Containers ── */
   .section {
-    padding: 44px 18px !important;
+    padding: 76px 20px 54px !important;
   }
   .section-bar {
-    margin-bottom: 20px;
-    padding-bottom: 14px;
+    margin-bottom: 32px !important;
+    padding-bottom: 16px !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
   }
 
+  /* ── Projects Grid Breathing Room ── */
   .projects-grid {
     grid-template-columns: 1fr !important;
-    gap: 16px !important;
+    gap: 26px !important;
   }
-  .card--featured, .card--small {
+  .card--featured,
+  .card--small {
     grid-column: 1 !important;
     grid-row: auto !important;
     display: flex !important;
@@ -1869,65 +1958,205 @@ section.contact {
     border-bottom: 1px solid var(--border) !important;
   }
   .card--small .card-preview {
-    height: 135px !important;
+    height: 140px !important;
   }
   .card-body {
-    padding: 20px 18px !important;
+    padding: 24px 20px !important;
   }
   .card-title {
-    font-size: 1.2rem !important;
+    font-size: 1.25rem !important;
+    margin-bottom: 8px !important;
+  }
+  .card-desc {
+    font-size: 0.88rem !important;
+    line-height: 1.62 !important;
+    margin-bottom: 18px !important;
+  }
+  .card-tags {
+    gap: 8px !important;
+    margin-bottom: 18px !important;
+  }
+  .card-actions {
+    gap: 10px !important;
+  }
+  .card-actions .btn {
+    min-height: 44px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
 
+  /* ── Journey Timeline ── */
   .journey-grid {
     grid-template-columns: 1fr !important;
-    gap: 16px !important;
+    gap: 24px !important;
   }
   .journey-card {
-    padding: 20px !important;
+    padding: 24px 20px !important;
+    border-radius: 16px !important;
   }
 
-  .toolkit-next {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 16px !important;
-  }
-
-  .contact-card {
-    padding: 24px 18px !important;
-  }
-  .contact-buttons {
-    flex-direction: column;
-    width: 100%;
-  }
-  .contact-buttons .btn {
-    width: 100%;
-    justify-content: center;
-  }
-
+  /* ── Skills & Toolkit ── */
   .skills-list {
-    justify-content: center;
-    row-gap: 6px;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 12px 18px !important;
+    margin-bottom: 36px !important;
   }
   .skills-list li {
-    font-size: clamp(1.5rem, 6.5vw, 2.2rem) !important;
+    font-size: clamp(1.4rem, 6vw, 1.8rem) !important;
+  }
+  .toolkit-grid {
+    gap: 20px !important;
+  }
+  .toolkit-category {
+    padding: 22px 18px !important;
+  }
+  .toolkit-next {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    padding: 18px !important;
+    gap: 12px !important;
   }
 
-  .footer {
-    flex-direction: column;
-    text-align: center;
-    gap: 8px;
-    padding: 24px 18px !important;
+  /* ── Contact Section & Dispatch ── */
+  .contact-card {
+    padding: 32px 20px !important;
+    border-radius: 18px !important;
+  }
+  .contact-title {
+    font-size: 1.35rem !important;
+    line-height: 1.35 !important;
+  }
+  .contact-desc {
+    font-size: 0.88rem !important;
+    line-height: 1.65 !important;
+    margin-bottom: 24px !important;
+  }
+  .dispatch-console {
+    gap: 14px !important;
+    padding: 18px !important;
+  }
+  .dispatch-row {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+  .dispatch-email-box {
+    width: 100% !important;
+    min-height: 48px !important;
+    font-size: 0.84rem !important;
+    padding: 0 16px !important;
+    justify-content: flex-start !important;
+  }
+  .dispatch-btn {
+    width: 100% !important;
+    min-height: 48px !important;
+    justify-content: center !important;
+    font-size: 0.82rem !important;
+    border-radius: 10px !important;
+  }
+  .dispatch-telemetry-row {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 8px !important;
+  }
+
+  /* ── Enhanced Mobile Footer ── */
+  .footer-premium {
+    margin-top: 64px !important;
+    padding: 48px 20px 36px !important;
+    overflow: hidden !important;
+  }
+  .footer-watermark {
+    font-size: clamp(3rem, 15vw, 4.8rem) !important;
+    margin-bottom: -8px !important;
+    opacity: 0.35 !important;
+  }
+  .footer-3d-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+    margin-bottom: 40px !important;
+  }
+  .card-3d-inner {
+    padding: 16px 18px !important;
+    border-radius: 14px !important;
+  }
+  .card-3d-icon-box {
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 12px !important;
+  }
+  .footer-columns {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 28px 18px !important;
+    padding-bottom: 32px !important;
+    margin-bottom: 24px !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  }
+  .footer-col--main {
+    grid-column: 1 / -1 !important;
+    padding-right: 0 !important;
+    margin-bottom: 8px !important;
+  }
+  .footer-col:last-child {
+    grid-column: 1 / -1 !important;
+    margin-top: 6px !important;
+    padding: 18px !important;
+    background: rgba(255, 255, 255, 0.02) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    border-radius: 14px !important;
+  }
+  .footer-brand-title {
+    font-size: 1.05rem !important;
+    margin-bottom: 4px !important;
+  }
+  .footer-bio-note {
+    font-size: 0.8rem !important;
+    line-height: 1.62 !important;
+    max-width: 100% !important;
+  }
+  .footer-col-header {
+    font-size: 0.65rem !important;
+    letter-spacing: 0.14em !important;
+    margin-bottom: 8px !important;
+  }
+  .footer-links {
+    gap: 10px !important;
+  }
+  .footer-links a {
+    font-size: 0.8rem !important;
+    padding: 2px 0 !important;
+  }
+  .footer-bottom-bar {
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 16px !important;
+    padding-top: 16px !important;
+  }
+  .footer-back-to-top {
+    order: -1 !important;
+    min-height: 44px !important;
+    padding: 10px 22px !important;
+    font-size: 0.74rem !important;
+    border-radius: 999px !important;
+    margin-bottom: 4px !important;
   }
 }
 
 @media (max-width: 480px) {
   .hero-actions {
-    flex-direction: column;
-    width: 100%;
-    gap: 10px;
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 12px !important;
   }
   .hero-actions .btn {
-    width: 100%;
+    width: 100% !important;
+    justify-content: center !important;
+  }
+}
     justify-content: center;
   }
 }
