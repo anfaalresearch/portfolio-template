@@ -1,20 +1,16 @@
 /**
  * ══════════════════════════════════════════════════════════════════
- * CYBER GATEWAY & 3D GEOMETRIC HIGHWAY — WebGL Spatial Experience
+ * CYBER GATEWAY & 3D GEOMETRIC HIGHWAY — Optimized WebGL Spatial Engine
  * ══════════════════════════════════════════════════════════════════
- * Concept:
- *  - Hero: Sleek Cyber Gateway stands in deep space. Base is obsidian #07080a.
- *          ZERO clutter, zero blobs, zero floating boxes in Hero.
+ *  - Hero: Pristine Cyber Iris Aperture stands in deep space.
+ *          Base is deep obsidian #07080a. ZERO square panels, zero blobs.
  *          White headings and copy are 100% crisp and readable.
- *  - Scroll (0% -> 15%): The hydraulic blast doors slide open to left & right.
- *  - Transit (15% -> 85%): Camera accelerates forward through open door into
- *            the 3D Code Highway.
- *            Featuring floating 3D Wireframe Hexagons & Geodesic Tech Spheres
- *            with orbital rings, tumbling gently in depth exclusively along
- *            the FAR PERIPHERY margins.
- *            Zero plain flat squares · Center reading column 100% unobstructed.
- *  - Destination (85% -> 100%): Arrives at Contact hub with completed circuit.
- *  - Locked 60-120 FPS · Center-Left Waypoint HUD · Restrained Opacity.
+ *  - Scroll (0% -> 15%): The aperture rings rotate and expand outward.
+ *  - Transit (15% -> 85%): Camera accelerates forward into the 3D Highway.
+ *            Featuring sparse, delicate 3D floating Crystal Diamonds
+ *            (Octahedrons) & Geodesic Spheres with orbital rings.
+ *            Little objects · Zero flat squares · Far periphery margins.
+ *  - Mobile Optimized: Adaptive DPR, reduced geometry, zero jank, 60-120 FPS.
  */
 
 // Tunable Configuration Object
@@ -24,13 +20,13 @@ const CONFIG = {
   cyanColorHex: 0x38bdf8,     // Technical electric cyan
   bgColorHex: 0x07080a,       // Deep obsidian space base
   
-  doorRadius: 3.8,            // Radius of the cyber gateway door
+  doorRadius: 3.8,            // Radius of the cyber aperture gateway
   tunnelRadius: 9.2,          // Wide tunnel radius pushed to screen periphery
   doorZ: 0,                   // Z position of the portal door
   
   cameraStartPosZ: 16,        // Camera starts outside looking at portal door
   smoothing: 0.08,            // Scroll lerp inertia factor
-  mouseParallaxMax: 0.024,    // Gentle perspective shift on mouse move
+  mouseParallaxMax: 0.022,    // Gentle perspective shift on mouse move
   mouseEasing: 0.06
 };
 
@@ -48,7 +44,7 @@ if (typeof window !== 'undefined') {
   const exploreHint = document.getElementById('explore-hint');
 
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let isMobile = window.innerWidth < 768;
+  const isMobile = window.innerWidth < 768 || ('ontouchstart' in window);
 
   const THREE = window.THREE;
   if (!THREE) {
@@ -68,7 +64,7 @@ if (typeof window !== 'undefined') {
   /* ── 2. THREE.JS SCENE SETUP ────────────────────────────────── */
   let renderer, scene, camera;
   let tunnelSpline;
-  let doorGroup, doorLeft, doorRight, doorRimOuter, doorRimInner, doorLockBadge;
+  let apertureGroup, apertureOuterRim, apertureInnerHex, apertureBlades, apertureLockBadge;
   let tunnelRingsGroup, warpRailsGroup, holoObjectsGroup, codeDustPoints;
   const holo3DItems = [];
 
@@ -88,7 +84,7 @@ if (typeof window !== 'undefined') {
     try {
       renderer = new THREE.WebGLRenderer({
         canvas,
-        antialias: window.devicePixelRatio < 2,
+        antialias: !isMobile && window.devicePixelRatio < 2,
         alpha: true,
         powerPreference: 'high-performance',
         stencil: false,
@@ -99,7 +95,9 @@ if (typeof window !== 'undefined') {
       return false;
     }
 
-    const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+    // Adaptive DPR: Mobile clamped to 1.25 for battery & thermal efficiency
+    const maxDpr = isMobile ? 1.25 : 1.75;
+    const dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
     renderer.setPixelRatio(dpr);
     renderer.setSize(window.innerWidth, window.innerHeight, false);
 
@@ -110,7 +108,7 @@ if (typeof window !== 'undefined') {
     camera.position.set(0, 0.2, CONFIG.cameraStartPosZ);
 
     buildSpline();
-    buildCyberDoor();
+    buildCyberAperture();
     buildCodeHighway();
     buildHolo3DObjects();
     buildCodeDust();
@@ -120,11 +118,10 @@ if (typeof window !== 'undefined') {
 
   /* ── 3. 3D TUNNEL SPLINE PATH ───────────────────────────────── */
   function buildSpline() {
-    // Smooth spline starting at portal door and traveling through depth
-    // Door is at Z = 0 (u ~ 0.11)
+    // Smooth spline starting at aperture portal and traveling through depth
     const points = [
       new THREE.Vector3(0, 0.2, 16),          // Hero camera rest (u = 0)
-      new THREE.Vector3(0, 0, 0),             // Door threshold (u ~ 0.11)
+      new THREE.Vector3(0, 0, 0),             // Aperture threshold (u ~ 0.11)
       new THREE.Vector3(-3.5, 1.5, -28),      // Selected Work
       new THREE.Vector3(-6.0, -1.0, -56),     // Work apex
       new THREE.Vector3(1.0, 2.0, -84),       // Journey
@@ -135,181 +132,105 @@ if (typeof window !== 'undefined') {
     tunnelSpline = new THREE.CatmullRomCurve3(points, false, 'centripetal', 0.45);
   }
 
-  /* ── 4. FUTURISTIC 3D CYBER DOOR (Opens on Scroll) ─────────── */
-  function createDoorPanelTexture(isLeft) {
-    const c = document.createElement('canvas');
-    c.width = 512;
-    c.height = 1024;
-    const ctx = c.getContext('2d');
-
-    // Deep stealth black titanium panel
-    ctx.fillStyle = '#080a0e';
-    ctx.fillRect(0, 0, 512, 1024);
-
-    // Subtle technical grid
-    ctx.strokeStyle = 'rgba(56, 189, 248, 0.08)';
-    ctx.lineWidth = 1;
-    for (let x = 0; x <= 512; x += 32) {
-      ctx.beginPath();
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, 1024);
-      ctx.stroke();
-    }
-    for (let y = 0; y <= 1024; y += 32) {
-      ctx.beginPath();
-      ctx.moveTo(0, y);
-      ctx.lineTo(512, y);
-      ctx.stroke();
-    }
-
-    // Outer cyber-border
-    ctx.strokeStyle = isLeft ? 'rgba(200, 245, 66, 0.75)' : 'rgba(56, 189, 248, 0.75)';
-    ctx.lineWidth = 3;
-    ctx.strokeRect(6, 6, 500, 1012);
-
-    // Inner bevel border
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
-    ctx.lineWidth = 1;
-    ctx.strokeRect(18, 18, 476, 988);
-
-    // Diagonal hazard stripes on door edges
-    ctx.fillStyle = isLeft ? 'rgba(200, 245, 66, 0.16)' : 'rgba(56, 189, 248, 0.16)';
-    for (let y = 60; y < 980; y += 75) {
-      ctx.fillRect(isLeft ? 460 : 12, y, 40, 26);
-    }
-
-    // Circuit conduits
-    ctx.strokeStyle = isLeft ? 'rgba(200, 245, 66, 0.28)' : 'rgba(56, 189, 248, 0.28)';
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    const startX = isLeft ? 120 : 392;
-    ctx.moveTo(startX, 180);
-    ctx.lineTo(startX, 420);
-    ctx.lineTo(startX + (isLeft ? 80 : -80), 500);
-    ctx.lineTo(startX + (isLeft ? 80 : -80), 850);
-    ctx.stroke();
-
-    // Technical telemetry stencils
-    ctx.fillStyle = isLeft ? '#c8f542' : '#38bdf8';
-    ctx.font = 'bold 22px monospace';
-    ctx.fillText(isLeft ? 'PORTAL_01 // SEC_LOCK' : 'KERNEL_CORE // 0x7FFF', 36, 95);
-
-    ctx.font = '15px monospace';
-    ctx.fillStyle = '#94a3b8';
-    ctx.fillText(isLeft ? 'STATUS: ARMED · STANDBY' : 'ACCESS: AUTHORIZED', 36, 126);
-    ctx.fillText(isLeft ? 'TKMCE · CS & AI · B.TECH \'30' : 'FIRST PRINCIPLES · 2030', 36, 150);
-
-    // Bottom telemetry
-    ctx.fillText(isLeft ? 'HYDRAULIC_PRESSURE: 3200 PSI' : 'ENCRYPTION: AES-GCM-256', 36, 920);
-    ctx.fillText(isLeft ? 'SCROLL_DOWN_TO_ENTER >>' : '<< INITIALIZE_WARP_TRANSIT', 36, 946);
-
-    const tex = new THREE.CanvasTexture(c);
-    tex.minFilter = THREE.LinearFilter;
-    return tex;
-  }
-
+  /* ── 4. FUTURISTIC 3D CYBER APERTURE (Opens on Scroll) ──────── */
   function createLockBadgeTexture() {
     const c = document.createElement('canvas');
     c.width = 512;
-    c.height = 110;
+    c.height = 96;
     const ctx = c.getContext('2d');
 
-    ctx.fillStyle = 'rgba(10, 14, 22, 0.94)';
-    ctx.fillRect(0, 0, 512, 110);
+    ctx.fillStyle = 'rgba(10, 14, 22, 0.92)';
+    ctx.fillRect(0, 0, 512, 96);
 
     ctx.strokeStyle = 'rgba(200, 245, 66, 0.85)';
     ctx.lineWidth = 2.5;
-    ctx.strokeRect(3, 3, 506, 104);
+    ctx.strokeRect(3, 3, 506, 90);
 
     ctx.fillStyle = '#c8f542';
-    ctx.fillRect(16, 20, 6, 70);
+    ctx.fillRect(16, 16, 6, 64);
 
-    ctx.font = 'bold 21px "Space Grotesk", monospace, sans-serif';
+    ctx.font = 'bold 20px "Space Grotesk", monospace, sans-serif';
     ctx.fillStyle = '#c8f542';
-    ctx.fillText('[ ⬡ CYBER GATEWAY · SCROLL TO OPEN & ENTER ]', 32, 64);
+    ctx.fillText('[ ⬡ CYBER GATEWAY · SCROLL TO ENTER ]', 32, 54);
 
     const tex = new THREE.CanvasTexture(c);
     tex.minFilter = THREE.LinearFilter;
     return tex;
   }
 
-  function buildCyberDoor() {
-    doorGroup = new THREE.Group();
-    doorGroup.position.set(0, 0, CONFIG.doorZ);
+  function buildCyberAperture() {
+    apertureGroup = new THREE.Group();
+    apertureGroup.position.set(0, 0, CONFIG.doorZ);
 
-    // Outer Gateway Hairline Rim (Lime)
+    // Outer Circular Hairline Rim (Lime)
     const rimGeoA = new THREE.TorusGeometry(CONFIG.doorRadius, 0.035, 16, 64);
     const rimMatA = new THREE.MeshBasicMaterial({
       color: CONFIG.accentColorHex,
       transparent: true,
-      opacity: 0.45,
+      opacity: 0.48,
       blending: THREE.AdditiveBlending
     });
-    doorRimOuter = new THREE.Mesh(rimGeoA, rimMatA);
-    doorGroup.add(doorRimOuter);
+    apertureOuterRim = new THREE.Mesh(rimGeoA, rimMatA);
+    apertureGroup.add(apertureOuterRim);
 
-    // Inner Gateway Hairline Rim (Cyan)
-    const rimGeoB = new THREE.TorusGeometry(CONFIG.doorRadius * 1.08, 0.02, 12, 64);
-    const rimMatB = new THREE.MeshBasicMaterial({
+    // Inner Hexagonal Perimeter Ring (Cyan)
+    const hexRingGeo = new THREE.RingGeometry(CONFIG.doorRadius * 0.94, CONFIG.doorRadius * 0.965, 6);
+    const hexRingMat = new THREE.MeshBasicMaterial({
       color: CONFIG.cyanColorHex,
+      side: THREE.DoubleSide,
       transparent: true,
-      opacity: 0.28,
+      opacity: 0.35,
       blending: THREE.AdditiveBlending
     });
-    doorRimInner = new THREE.Mesh(rimGeoB, rimMatB);
-    doorGroup.add(doorRimInner);
+    apertureInnerHex = new THREE.Mesh(hexRingGeo, hexRingMat);
+    apertureGroup.add(apertureInnerHex);
 
-    // Left Door Sliding Panel
-    const panelGeo = new THREE.PlaneGeometry(3.6, 7.4);
-    const leftMat = new THREE.MeshBasicMaterial({
-      map: createDoorPanelTexture(true),
-      side: THREE.DoubleSide,
-      transparent: true,
-      opacity: 0.94
-    });
-    doorLeft = new THREE.Mesh(panelGeo, leftMat);
-    doorLeft.position.set(-1.8, 0, 0);
-    doorGroup.add(doorLeft);
+    // 6 Radial Laser Iris Blades (Delicate wireframe aperture that opens radially)
+    apertureBlades = new THREE.Group();
+    const bladeCount = 6;
+    for (let b = 0; b < bladeCount; b++) {
+      const angle = (b / bladeCount) * Math.PI * 2;
+      const arcGeo = new THREE.TorusGeometry(CONFIG.doorRadius * 0.65, 0.02, 8, 24, Math.PI / 3);
+      const arcMat = new THREE.MeshBasicMaterial({
+        color: b % 2 === 0 ? CONFIG.accentColorHex : CONFIG.cyanColorHex,
+        transparent: true,
+        opacity: 0.35,
+        blending: THREE.AdditiveBlending
+      });
+      const arcMesh = new THREE.Mesh(arcGeo, arcMat);
+      arcMesh.rotation.z = angle;
+      apertureBlades.add(arcMesh);
+    }
+    apertureGroup.add(apertureBlades);
 
-    // Right Door Sliding Panel
-    const rightMat = new THREE.MeshBasicMaterial({
-      map: createDoorPanelTexture(false),
-      side: THREE.DoubleSide,
-      transparent: true,
-      opacity: 0.94
-    });
-    doorRight = new THREE.Mesh(panelGeo, rightMat);
-    doorRight.position.set(1.8, 0, 0);
-    doorGroup.add(doorRight);
-
-    // Central Status Lock Badge
+    // Sleek Status Lock Badge
     const badgeMat = new THREE.MeshBasicMaterial({
       map: createLockBadgeTexture(),
       transparent: true,
-      opacity: 0.92,
+      opacity: 0.90,
       blending: THREE.AdditiveBlending
     });
-    const badgeGeo = new THREE.PlaneGeometry(4.2, 0.92);
-    doorLockBadge = new THREE.Mesh(badgeGeo, badgeMat);
-    doorLockBadge.position.set(0, -3.2, 0.15);
-    doorGroup.add(doorLockBadge);
+    const badgeGeo = new THREE.PlaneGeometry(3.8, 0.72);
+    apertureLockBadge = new THREE.Mesh(badgeGeo, badgeMat);
+    apertureLockBadge.position.set(0, -3.1, 0.15);
+    apertureGroup.add(apertureLockBadge);
 
-    scene.add(doorGroup);
+    scene.add(apertureGroup);
   }
 
   /* ── 5. 3D HIGHWAY TUNNEL RINGS & WARP RAILS ─────────────────── */
   function buildCodeHighway() {
     tunnelRingsGroup = new THREE.Group();
-    const ringCount = 20;
+    // Mobile uses 10 rings, desktop uses 18
+    const ringCount = isMobile ? 10 : 18;
 
     for (let i = 0; i < ringCount; i++) {
-      // ONLY place tunnel rings AFTER the door (u from 0.16 to 0.95)
       const u = 0.16 + (i / ringCount) * 0.79;
       const pt = tunnelSpline.getPoint(u);
       const tangent = tunnelSpline.getTangent(u).normalize();
 
       const isLime = i % 2 === 0;
-      const ringGeo = new THREE.TorusGeometry(CONFIG.tunnelRadius, 0.026, 12, 48);
+      const ringGeo = new THREE.TorusGeometry(CONFIG.tunnelRadius, 0.024, 10, isMobile ? 32 : 44);
       const ringMat = new THREE.MeshBasicMaterial({
         color: isLime ? CONFIG.accentColorHex : CONFIG.cyanColorHex,
         transparent: true,
@@ -325,10 +246,10 @@ if (typeof window !== 'undefined') {
     tunnelRingsGroup.visible = false;
     scene.add(tunnelRingsGroup);
 
-    // Longitudinal Warp Speed Strands
+    // Longitudinal Warp Speed Strands (Laser Rails along Tunnel)
     warpRailsGroup = new THREE.Group();
-    const railCount = 6;
-    const samples = 64;
+    const railCount = isMobile ? 4 : 6;
+    const samples = isMobile ? 40 : 64;
 
     try {
       const frames = tunnelSpline.computeFrenetFrames(samples, false);
@@ -359,7 +280,7 @@ if (typeof window !== 'undefined') {
         const railMat = new THREE.LineBasicMaterial({
           color: isLime ? CONFIG.accentColorHex : CONFIG.cyanColorHex,
           transparent: true,
-          opacity: 0.16,
+          opacity: 0.15,
           blending: THREE.AdditiveBlending
         });
         const railLine = new THREE.Line(railGeo, railMat);
@@ -372,63 +293,32 @@ if (typeof window !== 'undefined') {
     }
   }
 
-  /* ── 6. 3D HEXAGONS & GEODESIC TECH SPHERES (Sparse & Premium) ─ */
-  function createHexBadgeTexture(label, isLime) {
-    const c = document.createElement('canvas');
-    c.width = 256;
-    c.height = 256;
-    const ctx = c.getContext('2d');
-
-    ctx.clearRect(0, 0, 256, 256);
-
-    ctx.strokeStyle = isLime ? 'rgba(200, 245, 66, 0.85)' : 'rgba(56, 189, 248, 0.85)';
-    ctx.lineWidth = 4;
-    ctx.beginPath();
-    ctx.arc(128, 128, 108, 0, Math.PI * 2);
-    ctx.stroke();
-
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.arc(128, 128, 92, 0, Math.PI * 2);
-    ctx.stroke();
-
-    ctx.font = 'bold 36px "Space Grotesk", "JetBrains Mono", monospace, sans-serif';
-    ctx.fillStyle = isLime ? '#c8f542' : '#38bdf8';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(label, 128, 128);
-
-    const tex = new THREE.CanvasTexture(c);
-    tex.minFilter = THREE.LinearFilter;
-    return tex;
-  }
-
+  /* ── 6. DELICATE 3D FLOATING OBJECTS (Little Crystals & Orbs) ─── */
   function buildHolo3DObjects() {
     holoObjectsGroup = new THREE.Group();
 
-    // 10 Sparse, high-end 3D elements alternating between 3D Hexagons and Tech Spheres
-    const HOLO_ITEMS = [
-      { type: 'hex',    label: 'C++',       u: 0.18, isLime: true },
-      { type: 'sphere', label: 'ORB_01',    u: 0.26, isLime: false },
-      { type: 'hex',    label: '0x7FFF',    u: 0.35, isLime: false },
-      { type: 'sphere', label: 'ORB_02',    u: 0.44, isLime: true },
-      { type: 'hex',    label: 'GIT',       u: 0.52, isLime: true },
-      { type: 'sphere', label: 'ORB_03',    u: 0.61, isLime: false },
-      { type: 'hex',    label: 'ACL_SIM',   u: 0.70, isLime: false },
-      { type: 'sphere', label: 'ORB_04',    u: 0.78, isLime: true },
-      { type: 'hex',    label: 'O(log N)',  u: 0.85, isLime: true },
-      { type: 'sphere', label: 'ORB_05',    u: 0.92, isLime: false }
+    // 7 Sparse, delicate 3D objects (Zero flat squares, small size)
+    const ITEMS = [
+      { type: 'diamond', u: 0.22, isLime: true },
+      { type: 'orb',     u: 0.34, isLime: false },
+      { type: 'diamond', u: 0.46, isLime: false },
+      { type: 'hex',     u: 0.58, isLime: true },
+      { type: 'orb',     u: 0.69, isLime: true },
+      { type: 'diamond', u: 0.80, isLime: false },
+      { type: 'hex',     u: 0.91, isLime: true }
     ];
 
-    HOLO_ITEMS.forEach((item, i) => {
+    // On mobile, only use 4 items for peak frame rates
+    const activeItems = isMobile ? ITEMS.filter((_, idx) => idx % 2 === 0) : ITEMS;
+
+    activeItems.forEach((item, i) => {
       const pt = tunnelSpline.getPoint(item.u);
       const isLeft = (i % 2 === 0);
-      const angle = isLeft ? (Math.PI * 0.92 + (Math.random() - 0.5) * 0.15) : (Math.PI * 0.08 + (Math.random() - 0.5) * 0.15);
-      const radius = CONFIG.tunnelRadius * 0.92;
+      const angle = isLeft ? (Math.PI * 0.92 + (Math.random() - 0.5) * 0.12) : (Math.PI * 0.08 + (Math.random() - 0.5) * 0.12);
+      const radius = CONFIG.tunnelRadius * 0.93;
 
       const ox = Math.cos(angle) * radius;
-      const oy = Math.sin(angle) * (radius * 0.5) + (Math.random() - 0.5) * 1.2;
+      const oy = Math.sin(angle) * (radius * 0.48) + (Math.random() - 0.5) * 1.0;
       const oz = (Math.random() - 0.5) * 2;
 
       const pos = pt.clone().add(new THREE.Vector3(ox, oy, oz));
@@ -436,78 +326,108 @@ if (typeof window !== 'undefined') {
       objGroup.position.copy(pos);
 
       let orbitalRingMesh = null;
+      const colorHex = item.isLime ? CONFIG.accentColorHex : CONFIG.cyanColorHex;
+      const altColorHex = item.isLime ? CONFIG.cyanColorHex : CONFIG.accentColorHex;
 
-      if (item.type === 'hex') {
-        // ── 3D Hexagonal Prism ──
-        const hexGeo = new THREE.CylinderGeometry(1.6, 1.6, 0.4, 6);
-        const hexMat = new THREE.MeshBasicMaterial({
-          color: 0x090c14,
+      if (item.type === 'diamond') {
+        // ── Little 3D Crystal Octahedron Diamond ──
+        const octGeo = new THREE.OctahedronGeometry(0.55, 0);
+        const octMat = new THREE.MeshBasicMaterial({
+          color: 0x07090e,
           transparent: true,
-          opacity: 0.85
+          opacity: 0.82
         });
-        const hexMesh = new THREE.Mesh(hexGeo, hexMat);
-        objGroup.add(hexMesh);
+        const octMesh = new THREE.Mesh(octGeo, octMat);
+        objGroup.add(octMesh);
 
-        // Glowing wireframe perimeter edges
-        const edgeGeo = new THREE.EdgesGeometry(hexGeo);
+        // Glowing wireframe diamond edges
+        const edgeGeo = new THREE.EdgesGeometry(octGeo);
         const edgeMat = new THREE.LineBasicMaterial({
-          color: item.isLime ? CONFIG.accentColorHex : CONFIG.cyanColorHex,
+          color: colorHex,
           transparent: true,
-          opacity: 0.68,
+          opacity: 0.65,
           blending: THREE.AdditiveBlending
         });
         const edgeLines = new THREE.LineSegments(edgeGeo, edgeMat);
         objGroup.add(edgeLines);
 
-        // Front Face Holographic Badge
-        const badgeTex = createHexBadgeTexture(item.label, item.isLime);
-        const badgeMat = new THREE.MeshBasicMaterial({
-          map: badgeTex,
+        // Delicate Orbital Halo Ring
+        const ringGeo = new THREE.TorusGeometry(0.85, 0.016, 8, 24);
+        const ringMat = new THREE.MeshBasicMaterial({
+          color: altColorHex,
           transparent: true,
-          opacity: 0.92,
+          opacity: 0.42,
           blending: THREE.AdditiveBlending
         });
-        const badgePlane = new THREE.Mesh(new THREE.PlaneGeometry(1.8, 1.8), badgeMat);
-        badgePlane.position.set(0, 0.22, 0);
-        badgePlane.rotation.x = -Math.PI / 2;
-        objGroup.add(badgePlane);
+        orbitalRingMesh = new THREE.Mesh(ringGeo, ringMat);
+        orbitalRingMesh.rotation.x = Math.PI / 3;
+        objGroup.add(orbitalRingMesh);
 
-      } else {
-        // ── 3D Geodesic Tech Sphere ──
-        const sphereGeo = new THREE.IcosahedronGeometry(1.25, 1);
+      } else if (item.type === 'orb') {
+        // ── Little 3D Geodesic Tech Sphere ──
+        const sphereGeo = new THREE.IcosahedronGeometry(0.48, 1);
         const sphereMat = new THREE.MeshBasicMaterial({
-          color: item.isLime ? CONFIG.accentColorHex : CONFIG.cyanColorHex,
+          color: colorHex,
           wireframe: true,
           transparent: true,
-          opacity: 0.38,
+          opacity: 0.34,
           blending: THREE.AdditiveBlending
         });
         const sphereMesh = new THREE.Mesh(sphereGeo, sphereMat);
         objGroup.add(sphereMesh);
 
-        // Luminous Core Particle
-        const coreGeo = new THREE.SphereGeometry(0.32, 12, 12);
+        // Tiny Luminous Core Point
+        const coreGeo = new THREE.SphereGeometry(0.14, 8, 8);
         const coreMat = new THREE.MeshBasicMaterial({
           color: 0xf8fafc,
           transparent: true,
-          opacity: 0.88,
+          opacity: 0.85,
           blending: THREE.AdditiveBlending
         });
         const coreMesh = new THREE.Mesh(coreGeo, coreMat);
         objGroup.add(coreMesh);
 
-        // Concentric Orbital Ring
-        const ringGeo = new THREE.TorusGeometry(1.85, 0.024, 8, 36);
+        // Delicate Orbital Ring
+        const ringGeo = new THREE.TorusGeometry(0.78, 0.016, 8, 24);
         const ringMat = new THREE.MeshBasicMaterial({
-          color: item.isLime ? CONFIG.cyanColorHex : CONFIG.accentColorHex,
+          color: altColorHex,
           transparent: true,
-          opacity: 0.45,
+          opacity: 0.40,
           blending: THREE.AdditiveBlending
         });
         orbitalRingMesh = new THREE.Mesh(ringGeo, ringMat);
-        orbitalRingMesh.rotation.x = Math.PI / 3;
         orbitalRingMesh.rotation.y = Math.PI / 4;
         objGroup.add(orbitalRingMesh);
+
+      } else {
+        // ── Little 3D Cyber Hexagonal Node ──
+        const hexGeo = new THREE.CylinderGeometry(0.52, 0.52, 0.12, 6);
+        const hexMat = new THREE.MeshBasicMaterial({
+          color: 0x07090e,
+          transparent: true,
+          opacity: 0.80
+        });
+        const hexMesh = new THREE.Mesh(hexGeo, hexMat);
+        objGroup.add(hexMesh);
+
+        const edgeGeo = new THREE.EdgesGeometry(hexGeo);
+        const edgeMat = new THREE.LineBasicMaterial({
+          color: colorHex,
+          transparent: true,
+          opacity: 0.65,
+          blending: THREE.AdditiveBlending
+        });
+        const edgeLines = new THREE.LineSegments(edgeGeo, edgeMat);
+        objGroup.add(edgeLines);
+
+        const coreGeo = new THREE.SphereGeometry(0.12, 8, 8);
+        const coreMat = new THREE.MeshBasicMaterial({
+          color: colorHex,
+          transparent: true,
+          opacity: 0.85,
+          blending: THREE.AdditiveBlending
+        });
+        objGroup.add(new THREE.Mesh(coreGeo, coreMat));
       }
 
       holoObjectsGroup.add(objGroup);
@@ -515,10 +435,10 @@ if (typeof window !== 'undefined') {
       holo3DItems.push({
         group: objGroup,
         orbitalRing: orbitalRingMesh,
-        rx: 0.25 + (i % 3) * 0.15,
-        ry: 0.35 + (i % 2) * 0.2,
-        rz: 0.15 + (i % 4) * 0.1,
-        ringSpeed: 0.8 + (i % 3) * 0.4
+        rx: 0.28 + (i % 3) * 0.12,
+        ry: 0.36 + (i % 2) * 0.15,
+        rz: 0.18 + (i % 4) * 0.08,
+        ringSpeed: 0.7 + (i % 3) * 0.3
       });
     });
 
@@ -526,9 +446,10 @@ if (typeof window !== 'undefined') {
     scene.add(holoObjectsGroup);
   }
 
-  /* ── 7. HYPERSPACE STREAMING PARTICLES ──────────────────────── */
+  /* ── 7. HYPERSPACE STREAMING PARTICLES (Optimized for Mobile) ── */
   function buildCodeDust() {
-    const count = isMobile ? 160 : 340;
+    // 60 particles on mobile, 200 on desktop
+    const count = isMobile ? 60 : 200;
     const coords = new Float32Array(count * 3);
     const colors = new Float32Array(count * 3);
 
@@ -559,10 +480,10 @@ if (typeof window !== 'undefined') {
     dustGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
     const dustMat = new THREE.PointsMaterial({
-      size: isMobile ? 1.4 : 1.8,
+      size: isMobile ? 1.2 : 1.6,
       vertexColors: true,
       transparent: true,
-      opacity: 0.38,
+      opacity: 0.35,
       blending: THREE.AdditiveBlending,
       depthWrite: false
     });
@@ -571,34 +492,32 @@ if (typeof window !== 'undefined') {
     scene.add(codeDustPoints);
   }
 
-  /* ── 8. CAMERA, DOOR & 3D GEOMETRY ANIMATION LOOP ────────────── */
+  /* ── 8. CAMERA, APERTURE & 3D GEOMETRY ANIMATION LOOP ────────── */
   function updatePortalAndCamera(now, dt) {
     // 1. Smooth scroll progress interpolation
     const target = scrollRef.progress;
     scrollRef.smoothed += (target - scrollRef.smoothed) * CONFIG.smoothing;
     const u = Math.min(0.999, Math.max(0.0001, scrollRef.smoothed));
 
-    // 2. Door Opening Animation (Slides open smoothly on initial scroll)
-    const doorOpen = Math.min(1.0, u * 6.5);
-    if (doorLeft && doorRight) {
-      doorLeft.position.x  = -1.8 - doorOpen * 7.5;
-      doorRight.position.x = 1.8 + doorOpen * 7.5;
-      doorLeft.rotation.y  = -doorOpen * 0.45;
-      doorRight.rotation.y = doorOpen * 0.45;
+    // 2. Aperture Opening Animation (Rings expand smoothly on initial scroll)
+    const apertureOpen = Math.min(1.0, u * 6.5);
+    if (apertureOuterRim) {
+      apertureOuterRim.rotation.z = now * 0.0003 + apertureOpen * 1.2;
+      apertureOuterRim.scale.set(1 + apertureOpen * 0.6, 1 + apertureOpen * 0.6, 1);
     }
-    if (doorRimOuter) {
-      doorRimOuter.rotation.z = now * 0.0003 + doorOpen * 1.2;
-      doorRimOuter.scale.set(1 + doorOpen * 0.5, 1 + doorOpen * 0.5, 1);
+    if (apertureInnerHex) {
+      apertureInnerHex.rotation.z = -now * 0.00025 - apertureOpen * 0.9;
+      apertureInnerHex.scale.set(1 + apertureOpen * 0.5, 1 + apertureOpen * 0.5, 1);
     }
-    if (doorRimInner) {
-      doorRimInner.rotation.z = -now * 0.0002 - doorOpen * 0.8;
-      doorRimInner.scale.set(1 + doorOpen * 0.4, 1 + doorOpen * 0.4, 1);
+    if (apertureBlades) {
+      apertureBlades.rotation.z = now * 0.0002 + apertureOpen * 1.5;
+      apertureBlades.scale.set(1 + apertureOpen * 0.8, 1 + apertureOpen * 0.8, 1);
     }
-    if (doorLockBadge) {
-      doorLockBadge.material.opacity = Math.max(0, 0.92 - doorOpen * 2.5);
+    if (apertureLockBadge) {
+      apertureLockBadge.material.opacity = Math.max(0, 0.90 - apertureOpen * 2.5);
     }
 
-    // 3. Reveal tunnel elements only when scrolling starts & door opens
+    // 3. Reveal tunnel elements only when scrolling starts & portal opens
     const isEnteringTunnel = u > 0.025;
     if (tunnelRingsGroup) {
       tunnelRingsGroup.visible = isEnteringTunnel;
@@ -610,7 +529,7 @@ if (typeof window !== 'undefined') {
       warpRailsGroup.visible = isEnteringTunnel;
     }
 
-    // 4. Smooth continuous 3D tumbling of Hexagons and Spheres
+    // 4. Smooth continuous 3D tumbling of Crystals & Orbs
     if (isEnteringTunnel) {
       holo3DItems.forEach((item) => {
         item.group.rotation.x += item.rx * dt;
@@ -625,13 +544,15 @@ if (typeof window !== 'undefined') {
     // 5. Camera Flight Along Tunnel Spline
     tunnelSpline.getPoint(u, _vSplinePt);
 
-    // Mouse parallax damping
-    mouse.x += (mouse.targetX - mouse.x) * CONFIG.mouseEasing;
-    mouse.y += (mouse.targetY - mouse.y) * CONFIG.mouseEasing;
+    // Mouse parallax damping (disabled on mobile)
+    if (!isMobile) {
+      mouse.x += (mouse.targetX - mouse.x) * CONFIG.mouseEasing;
+      mouse.y += (mouse.targetY - mouse.y) * CONFIG.mouseEasing;
+    }
 
-    const parallaxX = mouse.x * CONFIG.mouseParallaxMax * (isMobile ? 0 : 16);
-    const parallaxY = -mouse.y * CONFIG.mouseParallaxMax * (isMobile ? 0 : 12);
-    const idleFloat = (1 - Math.min(1, u * 4)) * Math.sin(now * 0.0012) * 0.15;
+    const parallaxX = isMobile ? 0 : mouse.x * CONFIG.mouseParallaxMax * 14;
+    const parallaxY = isMobile ? 0 : -mouse.y * CONFIG.mouseParallaxMax * 10;
+    const idleFloat = isMobile ? 0 : (1 - Math.min(1, u * 4)) * Math.sin(now * 0.0012) * 0.12;
 
     camera.position.x += (_vSplinePt.x + parallaxX - camera.position.x) * 0.085;
     camera.position.y += (_vSplinePt.y + parallaxY + idleFloat - camera.position.y) * 0.085;
@@ -644,7 +565,7 @@ if (typeof window !== 'undefined') {
 
     // 6. Subtle rotation on dust particles
     if (codeDustPoints) {
-      codeDustPoints.rotation.z = now * 0.00012;
+      codeDustPoints.rotation.z = now * 0.0001;
     }
   }
 
@@ -666,13 +587,15 @@ if (typeof window !== 'undefined') {
       gsap.registerPlugin(ScrollTrigger);
     }
 
+    // Lenis tuned for mobile responsiveness and desktop smoothness
     const lenis = new Lenis({
-      duration: 1.15,
+      duration: isMobile ? 0.95 : 1.15,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 0.95
+      wheelMultiplier: 0.95,
+      touchMultiplier: 1.4
     });
 
     gsap.ticker.add((time) => {
@@ -728,27 +651,26 @@ if (typeof window !== 'undefined') {
         });
       });
 
-      const mm = gsap.matchMedia();
-      mm.add('(max-width: 767px)', () => { isMobile = true; });
-      mm.add('(min-width: 768px)', () => { isMobile = false; });
-
       ScrollTrigger.refresh();
     }
   }
 
-  /* ── 10. MOUSE PARALLAX & RESIZE ────────────────────────────── */
+  /* ── 10. MOUSE PARALLAX & RESIZE (Battery-Aware) ────────────── */
   function setupInteractions() {
-    window.addEventListener('mousemove', (e) => {
-      mouse.targetX = (e.clientX / window.innerWidth) * 2 - 1;
-      mouse.targetY = (e.clientY / window.innerHeight) * 2 - 1;
-    }, { passive: true });
+    if (!isMobile) {
+      window.addEventListener('mousemove', (e) => {
+        mouse.targetX = (e.clientX / window.innerWidth) * 2 - 1;
+        mouse.targetY = (e.clientY / window.innerHeight) * 2 - 1;
+      }, { passive: true });
+    }
 
     window.addEventListener('resize', () => {
       if (!renderer || !camera) return;
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight, false);
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+      const maxDpr = isMobile ? 1.25 : 1.75;
+      const dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
       renderer.setPixelRatio(dpr);
     }, { passive: true });
 
@@ -767,7 +689,7 @@ if (typeof window !== 'undefined') {
     }, false);
   }
 
-  /* ── 11. UNIFIED RENDER LOOP ────────────────────────────────── */
+  /* ── 11. UNIFIED RENDER LOOP (Inside GSAP Ticker) ────────────── */
   function startRenderLoop() {
     let lastTime = performance.now();
 
