@@ -117,7 +117,7 @@ ul    { list-style: none; }
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background: radial-gradient(circle at 50% 45%, rgba(7, 8, 10, 0.28) 0%, rgba(7, 8, 10, 0.78) 100%);
+  background: radial-gradient(circle at 50% 50%, rgba(7, 8, 10, 0.18) 0%, rgba(7, 8, 10, 0.82) 100%);
 }
 
 /* ── WebGL2 Telemetry HUD (Scrolltide & Space Theme) ── */
@@ -423,6 +423,7 @@ section.contact {
   letter-spacing: -0.03em;
   line-height: 1.06;
   margin-bottom: 20px;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.95);
 }
 .hero-heading em {
   font-family: var(--serif);
@@ -514,8 +515,14 @@ section.contact {
 .hero-frame {
   position: relative;
   width: min(100%, 380px);
-  border-radius: 14px;
-  transition: transform .1s ease-out;
+  border-radius: 16px;
+  padding: 6px;
+  background: rgba(14, 16, 20, 0.75);
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 25px rgba(56, 189, 248, 0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: transform .12s ease-out;
   will-change: transform;
 }
 
@@ -524,10 +531,10 @@ section.contact {
   aspect-ratio: 1 / 1;
   object-fit: cover;
   object-position: center center;
-  border-radius: 12px;
-  border: 1px solid var(--border-hi);
+  border-radius: 10px;
+  border: 1px solid var(--border);
   display: block;
-  filter: contrast(1.04) saturate(0.92);
+  filter: contrast(1.05) saturate(0.96);
 }
 
 .frame-tag {
