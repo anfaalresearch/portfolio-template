@@ -85,7 +85,7 @@ ul    { list-style: none; }
   top: 14px;
 }
 
-/* ── Interactive WebGL2 3D World Canvas ─────────── */
+/* ── Signal Path 3D WebGL Canvas & Soft Vignette ── */
 .world-canvas {
   position: fixed;
   inset: 0;
@@ -93,9 +93,16 @@ ul    { list-style: none; }
   height: 100vh;
   z-index: 0;
   pointer-events: none;
-  opacity: 1;
-  mix-blend-mode: screen;
+  opacity: 0.95;
   display: block;
+}
+
+.world-vignette {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 45%, rgba(7, 8, 10, 0.28) 0%, rgba(7, 8, 10, 0.78) 100%);
 }
 
 /* ── WebGL2 Telemetry HUD (Scrolltide & Space Theme) ── */
@@ -525,7 +532,11 @@ section.contact {
 }
 .frame-tag--tl { top: 16px; left: 16px; color: var(--fg); font-weight: 700; }
 .frame-tag--tr { top: 16px; right: 16px; color: var(--green); border-color: var(--border-green); }
-.frame-tag--br { bottom: 16px; right: 16px; }
+.frame-tag--br {
+  bottom: 16px;
+  right: 16px;
+  transition: opacity 0.5s ease;
+}
 
 .frame-corner {
   position: absolute;
