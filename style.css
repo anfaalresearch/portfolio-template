@@ -40,8 +40,23 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html {
   font-size: 16px;
-  scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+}
+/* ── Lenis Smooth Scroll Engine Styles ─────────────── */
+html.lenis, html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
 }
 body {
   font-family: var(--sans);
